@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>SRACO Web — Sitemap &amp; Estimate</title>
+
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+<link rel="stylesheet" href="../shared/service-menu.css">
+
+<style>
+:root {
+  --brand-blue:       #116490;
+  --brand-blue-light: #9FBACD;
+  --bg-top:    #0a1219;
+  --bg-bottom: #1e2a35;
+  --charcoal:  #1e2a35;
+  --white:     #fff;
+  --accent:    #4B6CFF;
+  --line:      rgba(159, 186, 205, 0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: var(--charcoal);
+  color: var(--white);
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+  overflow-x: hidden;            /* only .board scrolls horizontally */
+}
+
+.wrap {
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 32px 16px;
+}
+
+/* ─── Top bar (white-label text wordmark) ────────────────────── */
+
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  padding: 14px max(32px, calc(50vw - 508px)) 16px;
+  background: rgba(10, 18, 25, 0.82);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.brand { display: inline-flex; align-items: center; gap: 11px; height: 36px; text-decoration: none; }
+.brand__mark { width: 32px; height: 32px; border: 1.5px solid var(--brand-blue-light); border-radius: 8px; display: grid; place-items: center; font-size: 16px; font-weight: 700; color: var(--brand-blue-light); }
+.brand__name { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; color: var(--white); }
+.brand__name small { font-weight: 500; color: rgba(255,255,255,0.45); margin-left: 7px; font-size: 12.5px; letter-spacing: 0.02em; }
+
+.eyebrow {
+  display: inline-block; font-size: 12px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--brand-blue-light); margin-bottom: 16px;
+}
+
+/* 2-column header: title left, description right */
+.head { display: grid; grid-template-columns: 2fr 1fr; gap: 48px; align-items: end; }
+@media (max-width: 760px) { .head { grid-template-columns: 1fr; gap: 14px; align-items: start; } }
+
+.page-title {
+  font-size: clamp(30px, 4.5vw, 46px); font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 0;
+}
+
+.lede {
+  font-size: 14px; line-height: 1.55;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* Estimate section — moved BELOW the sitemap (Sitemap first, Estimate after) */
+.estimate { margin-top: 24px; padding-top: 16px; }
+.estimate__title {
+  font-size: 13px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.45); margin-bottom: 20px;
+}
+
+/* Stages strip */
+.stages-wrap { margin-top: 8px; }
+.stages { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.stage-card { padding: 18px 18px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; }
+.stage-card__n { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand-blue-light); }
+.stage-card__pay { font-size: 9px; font-weight: 600; letter-spacing: 0.05em; color: #c3cdff; background: rgba(75,108,255,0.16); border: 1px solid rgba(75,108,255,0.4); border-radius: 4px; padding: 2px 6px; text-transform: none; }
+.stage-card__t { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin: 10px 0 6px; }
+.stage-card__d { font-size: 12.5px; line-height: 1.45; color: rgba(255,255,255,0.5); }
+
+/* ─── Notice + legend ────────────────────────────────────────── */
+
+.notice {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px 18px;
+  background: rgba(255, 173, 51, 0.08);
+  border: 1px solid rgba(255, 173, 51, 0.28);
+  border-radius: 10px;
+  font-size: 13px; line-height: 1.5;
+  color: rgba(255, 220, 170, 0.92);
+  margin: 24px 0 0;
+}
+.notice strong { color: #ffce8a; font-weight: 600; }
+.notice svg { flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px; color: #ffce8a; }
+.notice--foot { margin-top: 48px; }
+
+.legend {
+  display: flex; flex-wrap: wrap; gap: 18px;
+  margin-top: 24px; font-size: 12px; color: rgba(255,255,255,0.5);
+}
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i {
+  font-style: normal; font-size: 9px; font-weight: 600; letter-spacing: 0.06em;
+  padding: 2px 6px; border-radius: 4px;
+}
+.b-tbc { color: #ffce8a; background: rgba(255,173,51,0.12); border: 1px solid rgba(255,173,51,0.3); }
+.b-p2  { color: #c3cdff; background: rgba(75,108,255,0.16); border: 1px solid rgba(75,108,255,0.4); }
+.b-sep { color: #e0b3ff; background: rgba(168,85,247,0.14); border: 1px solid rgba(168,85,247,0.4); }
+
+/* ─── Rollup stat strip ──────────────────────────────────────── */
+
+.rollup {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px; background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px; overflow: hidden; margin-top: 32px;
+}
+.stat { background: linear-gradient(180deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0.015) 100%); padding: 22px 20px; }
+.stat--accent { background: linear-gradient(180deg, rgba(75,108,255,0.16) 0%, rgba(75,108,255,0.06) 100%); }
+.stat__label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.45); margin-bottom: 10px; }
+.stat__value { font-size: 25px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; line-height: 1; }
+.stat__value small { font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.5); }
+.stat--accent .stat__value { color: #c3cdff; }
+
+/* ─── Horizontal sitemap board ───────────────────────────────── */
+
+.board-hint {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.4); margin: 28px 0 16px;
+}
+.board-hint svg { width: 15px; height: 15px; }
+
+.board {
+  display: flex; flex-direction: row; align-items: flex-start; gap: 28px;
+  overflow-x: auto; overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  cursor: grab;                  /* drag-to-pan affordance */
+  padding: 8px max(32px, calc(50vw - 508px)) 40px;
+}
+.board:active { cursor: grabbing; }
+.board::-webkit-scrollbar { height: 10px; }
+.board::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 999px; }
+.board::-webkit-scrollbar-thumb { background: rgba(159,186,205,0.25); border-radius: 999px; }
+.board::-webkit-scrollbar-thumb:hover { background: rgba(159,186,205,0.4); }
+
+/* ─── Page column (vertical) ─────────────────────────────────── */
+
+.column { flex: 0 0 300px; width: 300px; display: flex; flex-direction: column; align-items: center; }
+
+.node {
+  width: 100%; background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; overflow: hidden;
+}
+.node.is-child { border-style: dashed; border-color: rgba(159,186,205,0.3); }
+.node.is-system { border-color: rgba(75,108,255,0.28); background: rgba(75,108,255,0.04); }
+.node.is-work { border-color: rgba(168,85,247,0.32); background: rgba(168,85,247,0.05); }
+
+.node__head { display: flex; flex-direction: column; gap: 8px; padding: 13px 14px; background: rgba(255, 255, 255, 0.04); border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
+.node.is-system .node__head { background: rgba(75,108,255,0.08); }
+.node.is-work .node__head { background: rgba(168,85,247,0.09); }
+
+.node__headtop { display: flex; align-items: center; gap: 9px; }
+
+.node__num { flex-shrink: 0; width: 26px; height: 26px; display: grid; place-items: center; background: rgba(159, 186, 205, 0.12); border: 1px solid rgba(159, 186, 205, 0.24); border-radius: 7px; font-size: 12px; font-weight: 700; color: var(--brand-blue-light); font-variant-numeric: tabular-nums; }
+
+.node__name { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.node__sub { flex-shrink: 0; font-size: 12px; font-weight: 700; color: var(--brand-blue-light); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* badge row — sits UNDER the page name so long names aren't clipped */
+.node__badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.node__badge { font-size: 9px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 7px; border-radius: 5px; }
+.node__badge--popup   { color: #ffce8a; background: rgba(255,173,51,0.12); border: 1px solid rgba(255,173,51,0.3); }
+.node__badge--subpage { color: var(--brand-blue-light); background: rgba(159,186,205,0.12); border: 1px solid rgba(159,186,205,0.28); }
+.node__badge--system  { color: #c3cdff; background: rgba(75,108,255,0.16); border: 1px solid rgba(75,108,255,0.4); }
+.node__badge--work    { color: #e0b3ff; background: rgba(168,85,247,0.16); border: 1px solid rgba(168,85,247,0.42); }
+.node__badge--p2      { color: #c3cdff; background: rgba(75,108,255,0.16); border: 1px solid rgba(75,108,255,0.4); }
+.node__badge--excl    { color: #ffce8a; background: rgba(255,173,51,0.12); border: 1px solid rgba(255,173,51,0.38); }
+.node.is-excluded { opacity: 0.72; border-style: dashed; border-color: rgba(255,173,51,0.35); }
+.node__sub--excl { color: rgba(255,206,138,0.9) !important; }
+
+.node__sections { display: flex; flex-direction: column; gap: 8px; padding: 12px; }
+
+/* ─── Section tile ───────────────────────────────────────────── */
+
+.tile { padding: 11px 12px; background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 9px; transition: border-color 180ms ease, background 180ms ease; }
+.tile:hover { border-color: rgba(159,186,205,0.3); background: rgba(255,255,255,0.06); }
+.tile__row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.tile__name { font-size: 13.5px; font-weight: 600; letter-spacing: -0.005em; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile__hours { flex-shrink: 0; display: inline-flex; align-items: baseline; gap: 3px; padding: 3px 8px; background: rgba(159, 186, 205, 0.12); border: 1px solid rgba(159, 186, 205, 0.22); border-radius: 999px; font-size: 11.5px; font-weight: 700; color: var(--brand-blue-light); font-variant-numeric: tabular-nums; }
+.tile__hours small { font-size: 9px; font-weight: 500; opacity: 0.7; }
+.tile__desc { font-size: 11.5px; line-height: 1.4; color: rgba(255, 255, 255, 0.48); margin-top: 6px; }
+.tile__badges { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: middle; }
+.tile__badges i { font-style: normal; font-size: 8px; font-weight: 600; letter-spacing: 0.05em; padding: 1px 5px; border-radius: 4px; }
+
+/* ─── Connector ──────────────────────────────────────────────── */
+
+.connector { width: 2px; height: 28px; background: var(--line); }
+.connector--popup { background: repeating-linear-gradient(180deg, var(--line) 0 4px, transparent 4px 8px); }
+
+/* ─── Estimate breakdown ─────────────────────────────────────── */
+
+.breakdown { max-width: 1080px; margin: 24px auto 0; padding: 32px 32px 0; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.breakdown__title { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.45); margin-bottom: 20px; }
+.breakdown__table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.breakdown__table th, .breakdown__table td { text-align: right; padding: 12px 16px; font-size: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.breakdown__table th:first-child, .breakdown__table td:first-child { text-align: left; color: rgba(255,255,255,0.7); }
+.breakdown__table thead th { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.4); }
+.breakdown__table tr.is-total td { font-weight: 700; font-size: 16px; border-bottom: none; border-top: 2px solid rgba(255, 255, 255, 0.16); padding-top: 16px; }
+.breakdown__table tr.is-total td:not(:first-child) { color: #c3cdff; font-size: 28px; white-space: nowrap; }
+.breakdown__table tr.is-total .mm { font-size: 11px; font-weight: 500; color: #c3cdff; opacity: 0.7; margin-right: 8px; vertical-align: baseline; }
+.breakdown__note { margin-top: 16px; font-size: 12px; color: rgba(255, 255, 255, 0.4); line-height: 1.5; }
+.footer-pad { height: 120px; }
+</style>
+</head>
+<body>
+
+<script>
+  window.PREVIEW_PROJECT_NAME = "SRACO Web";
+  window.PREVIEW_DEFAULT_VERSION = "sitemap";
+  window.PREVIEW_VERSIONS = [
+    { id: "launcher", label: "Dashboard",         desc: "Estimate overview",        path: "../" },
+    { id: "sitemap",  label: "Sitemap & Estimate", desc: "Pages, sections, hours",   path: "" }
+  ];
+</script>
+
+<header class="topbar">
+  <a class="brand" href="../" aria-label="SRACO Web — Dashboard">
+    <span class="brand__mark">S</span>
+    <span class="brand__name">SRACO Web <small>Preliminary estimate</small></span>
+  </a>
+</header>
+
+<div class="wrap">
+  <header class="head">
+    <div class="head__main">
+      <span class="eyebrow">Preliminary Estimate</span>
+      <h1 class="page-title">Sitemap &amp; Estimate</h1>
+    </div>
+    <p class="lede">
+      SRACO Group corporate website — compiled from the client brief. Each page is a vertical column,
+      sections stack inside with hours on every tile, sub-pages branch downward. Bilingual (English +
+      Arabic-first / RTL) and all breakpoints are included as dedicated scope blocks.
+    </p>
+  </header>
+
+  <div class="legend">
+    <span><i class="b-tbc">TBC</i> needs clarification</span>
+    <span><i class="b-p2">P2</i> phase 2</span>
+    <span><i class="b-sep">SEP</i> separate work block</span>
+  </div>
+
+  <div class="board-hint">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M8 7 4 11l4 4M16 7l4 4-4 4M3 11h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Scroll or drag to see all pages
+  </div>
+</div>
+
+<!-- SITEMAP first -->
+<div class="board" id="board"></div>
+
+<!-- ESTIMATE after — see the work before the price -->
+<div class="wrap estimate">
+  <h2 class="estimate__title">Estimate</h2>
+
+  <div class="rollup" id="rollup"></div>
+
+  <table class="breakdown__table">
+    <thead><tr><th>Line</th><th>Min</th><th>Max</th></tr></thead>
+    <tbody id="breakdownBody"></tbody>
+  </table>
+</div>
+
+<!-- Stages -->
+<div class="wrap stages-wrap">
+  <h2 class="estimate__title">Stages</h2>
+  <div class="stages">
+    <div class="stage-card">
+      <span class="stage-card__n">Stage 1 <span class="stage-card__pay">100% prepaid</span></span>
+      <div class="stage-card__t">Concept</div>
+      <div class="stage-card__d">Visual direction + teaser of the key visual / motion. Paid 100% upfront before start.</div>
+    </div>
+    <div class="stage-card">
+      <span class="stage-card__n">Stage 2 <span class="stage-card__pay">prepay → deliver</span></span>
+      <div class="stage-card__t">Design — Part 1</div>
+      <div class="stage-card__d">Homepage, signature hero motion and the first batch of layouts (desktop → mobile). Prepay, then deliver.</div>
+    </div>
+    <div class="stage-card">
+      <span class="stage-card__n">Stage 3 <span class="stage-card__pay">prepay → deliver</span></span>
+      <div class="stage-card__t">Design — Part 2</div>
+      <div class="stage-card__d">Divisions, company pages and the Projects Portfolio. Prepay, then deliver.</div>
+    </div>
+    <div class="stage-card">
+      <span class="stage-card__n">Stage 4 <span class="stage-card__pay">prepay → deliver</span></span>
+      <div class="stage-card__t">Design — Part 3</div>
+      <div class="stage-card__d">Remaining pages, Arabic-first / RTL pass and micro-animations. Prepay, then deliver.</div>
+    </div>
+    <div class="stage-card">
+      <span class="stage-card__n">Stage 5 <span class="stage-card__pay">final payment</span></span>
+      <div class="stage-card__t">Acceptance</div>
+      <div class="stage-card__d">Review, sign-off and final payment.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Preliminary disclaimer — very bottom of the page -->
+<div class="wrap">
+  <div class="notice notice--foot">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.3 3.86 1.82 18a2 2 0 0 0 1.7 3h16.96a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.42 0Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span><strong>Preliminary estimate</strong> — design + animation only. Hours cover both languages (English + Arabic-first / RTL) and all breakpoints (desktop, tablet, mobile). The min–max range depends on the complexity of each block / section and is finalised after the page and block structure is approved. Working days are production only — they exclude possible management, comments or rework. <strong>Front-end build, CMS, ERP / CRM integrations, hosting, security and VAPT are out of design scope</strong> and handled with SRACO ITC (shown for context, not included in the figure). <strong>Video generation is not included</strong> — third-party generation / render services may be billed separately, with the amount known after the concept.</span>
+  </div>
+</div>
+<div class="footer-pad"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   SINGLE SOURCE OF TRUTH — SRACO Group corporate website (from brief).
+   Page = { name, sections:[ {name, desc?, min, max, tbc?, p2?, sep?} ],
+            children?:[ { name, kind:"subpage"|"popup", ...page } ],
+            work?:true, tag?, excluded?:true, p2?:true }
+   Flags: tbc = needs clarification · p2 = phase 2 · sep = separate work block.
+   Hours are in HOURS (min/max). Rate lives only in CONFIG.rate (not shown to client).
+   ─────────────────────────────────────────────────────────────── */
+const CONFIG = { rate: 30, commentsMin: 0.15, commentsMax: 0.20, mgmtMin: 0.10, mgmtMax: 0.10, hoursPerDay: 6 };
+
+const SITEMAP = [
+  { name: "Concept", work: true, tag: "Design", sections: [
+      { name: "Visual direction",   desc: "Look & feel, enterprise typography, colour system, layout language — premium, government-grade, not 'startup / SaaS'.", min: 12, max: 16 },
+      { name: "Signature visual & motion teaser", desc: "Direction teaser for the flagship hero + key motion (not the full animation).", min: 5, max: 7 },
+    ],
+  },
+  { name: "Signature Hero & Motion", work: true, tag: "Animation", sections: [
+      { name: "Hero concept & storyboard", desc: "'Building Saudi Arabia's Future' — key visual narrative across sectors.", min: 4, max: 6 },
+      { name: "Flagship hero motion",       desc: "Animated key-visual / flagship project showcase treatment.", min: 6, max: 9 },
+      { name: "Animated metric counters",   desc: "Corporate stat counters — motion design + spec.", min: 2, max: 3 },
+      { name: "Featured-projects motion",   desc: "Carousel + reveal choreography for featured work.", min: 4, max: 6 },
+    ],
+  },
+  { name: "Homepage", sections: [
+      { name: "Header & mega-menu",     desc: "Logo, mega-menu (4 divisions + 5 companies + Solutions), EN / AR switch.", min: 5, max: 8, sep: true },
+      { name: "Hero",                   desc: "Flagship 'Building Saudi Arabia's Future' visual + primary CTA.", min: 4, max: 6 },
+      { name: "Animated metrics band",  desc: "Key performance counters.", min: 2, max: 3 },
+      { name: "Division quick links",   desc: "Four division entry cards.", min: 2, max: 3 },
+      { name: "Featured projects carousel", desc: "(1–2 layouts) Cross-division highlights.", min: 3, max: 4 },
+      { name: "Client logo strip",      desc: "Trust strip of key clients.", min: 1.5, max: 2 },
+      { name: "Latest news",            desc: "News / announcements teaser row.", min: 2, max: 3 },
+      { name: "Primary CTA band",       desc: "Lead-capture call to action.", min: 1.5, max: 2 },
+      { name: "Footer",                 desc: "Navigation, offices, social, legal, language.", min: 3, max: 4 },
+    ],
+  },
+  { name: "About SRACO", sections: [
+      { name: "About hero",              desc: "Who SRACO is — intro + key visual.", min: 2, max: 3 },
+      { name: "History timeline",        desc: "Interactive milestones of the group.", min: 3, max: 5 },
+      { name: "Corporate values",        desc: "Values / principles block.", min: 2, max: 3 },
+      { name: "Leadership profiles",     desc: "Executive bios + photography grid.", min: 3, max: 4 },
+      { name: "Certifications",          desc: "Accreditations & trust block.", min: 2, max: 3 },
+      { name: "Geographic footprint map", desc: "KSA + regional expansion map.", min: 3, max: 4 },
+    ],
+  },
+  { name: "Company Page (×5 template)", sections: [
+      { name: "Company hero",        desc: "Standalone entry hero — built for organic / paid-media landing.", min: 4, max: 6 },
+      { name: "Positioning / intro", desc: "What this entity does, decoupled from the group homepage.", min: 2, max: 3 },
+      { name: "Services snapshot",   desc: "Key services preview → Services Overview.", min: 3, max: 4 },
+      { name: "Featured projects",   desc: "Entity projects preview → Projects.", min: 2, max: 3 },
+      { name: "Stats / credibility", desc: "Entity performance metrics.", min: 2, max: 3 },
+      { name: "Division-routed CTA", desc: "Lead routed to this division's commercial team.", min: 2, max: 3 },
+      { name: "Per-entity adaptation (×5)", desc: "Tailoring the template to 5 standalone companies — hero, imagery, copy blocks.", min: 6, max: 10, tbc: true },
+    ],
+    children: [
+      { name: "Services Overview", kind: "subpage", sections: [
+          { name: "Services hero",         desc: "Division services intro.", min: 2, max: 3 },
+          { name: "Service detail cards",  desc: "Standard service descriptions, layout system.", min: 3, max: 4 },
+          { name: "CTA",                   desc: "Enquiry call to action.", min: 1, max: 1.5 },
+      ]},
+      { name: "Projects", kind: "subpage", sections: [
+          { name: "Entity projects grid",  desc: "Projects scoped to this company.", min: 3, max: 4 },
+          { name: "Project card",          desc: "Case card with key metric.", min: 1.5, max: 2 },
+      ]},
+      { name: "Contacts", kind: "subpage", sections: [
+          { name: "Routed contact + map",  desc: "Division-routed contact block + office map.", min: 3, max: 4 },
+      ]},
+    ],
+  },
+  { name: "Solutions", sections: [
+      { name: "Solutions hero",            desc: "Aggregated solutions intro across companies.", min: 2, max: 3 },
+      { name: "Solutions grid",            desc: "Unified, cross-company solutions catalog.", min: 4, max: 6 },
+      { name: "Filter by division / sector", desc: "Light filtering of the aggregated view.", min: 2, max: 3 },
+      { name: "Solution detail card",      desc: "Solution row / detail card.", min: 2, max: 3 },
+      { name: "CTA",                       desc: "Call to action.", min: 1, max: 1.5 },
+    ],
+  },
+  { name: "Projects Portfolio", sections: [
+      { name: "Portfolio hero",            desc: "Flagship 'our work across every sector' intro.", min: 3, max: 4 },
+      { name: "Async filter (4 taxonomies)", desc: "Division · Sector · Location · Type — concurrent async filtering, URL-persisted, reset. The most commercially vital area.", min: 8, max: 12, sep: true },
+      { name: "Project grid / cards",      desc: "Case cards with imagery + key metric.", min: 4, max: 6 },
+      { name: "Sorting / view options",    desc: "Sort + view toggles.", min: 1.5, max: 2 },
+    ],
+    children: [
+      { name: "Case Study", kind: "subpage", sections: [
+          { name: "Case hero",             desc: "Project title, scope, headline metrics.", min: 4, max: 6 },
+          { name: "Imagery gallery + zoom", desc: "Large project imagery, zoom.", min: 3, max: 4 },
+          { name: "Video block",           desc: "Embedded project video.", min: 2, max: 3 },
+          { name: "Scope & metrics detail", desc: "Description, scope, outcomes.", min: 3, max: 4 },
+          { name: "Related projects",      desc: "Related case studies.", min: 1.5, max: 2 },
+      ]},
+    ],
+  },
+  { name: "Clients", sections: [
+      { name: "Clients hero",            desc: "Trusted-by intro.", min: 2, max: 3 },
+      { name: "Sector logo wall (20+)",  desc: "Logo wall organised by sector, 20+ verified clients.", min: 3, max: 4 },
+      { name: "Client success stories",  desc: "Story cards across divisions.", min: 3, max: 4 },
+      { name: "Testimonials",            desc: "(1–2 layouts) Quote slider.", min: 2, max: 3 },
+    ],
+  },
+  { name: "News & Media", sections: [
+      { name: "News feed",          desc: "Press releases, announcements, thought leadership.", min: 3, max: 4 },
+      { name: "Categories / filter", desc: "Topic filtering.", min: 1, max: 1.5 },
+      { name: "Media gallery",      desc: "Image / video media gallery.", min: 3, max: 4 },
+      { name: "Share + related",    desc: "Share actions, related items.", min: 0.5, max: 1 },
+    ],
+    children: [
+      { name: "Article", kind: "subpage", sections: [
+          { name: "Article hero",    desc: "Headline, cover, author / date.", min: 2, max: 3 },
+          { name: "Longform layout", desc: "Comfortable reading layout for long copy.", min: 3, max: 4 },
+      ]},
+    ],
+  },
+  { name: "Careers", sections: [
+      { name: "Careers hero",             desc: "Employer-brand intro.", min: 2, max: 3 },
+      { name: "Life at SRACO",            desc: "Culture, photography, values.", min: 3, max: 4 },
+      { name: "Open positions directory", desc: "Filterable list of open roles.", min: 3, max: 4 },
+      { name: "CV upload application form", desc: "Digital application + CV upload UX.", min: 3, max: 5, sep: true },
+    ],
+    children: [
+      { name: "Position detail", kind: "subpage", sections: [
+          { name: "Role description", desc: "Job hero + responsibilities.", min: 2, max: 3 },
+          { name: "Apply entry",      desc: "Apply CTA / form entry.", min: 1.5, max: 2 },
+      ]},
+    ],
+  },
+  { name: "Contact", sections: [
+      { name: "Contact hero",             desc: "Get-in-touch intro.", min: 1.5, max: 2 },
+      { name: "Division-routing form",    desc: "Conditional routing: select division / service → routed fields + confirmation, pushed to the right commercial team.", min: 5, max: 7, sep: true },
+      { name: "Office locations + Google Maps", desc: "Multi-office locations with embedded map.", min: 3, max: 4 },
+      { name: "Departments / direct contacts", desc: "Direct department contacts.", min: 1.5, max: 2 },
+    ],
+  },
+  { name: "System & Utility", sections: [
+      { name: "404 page",                desc: "Not-found page.", min: 1, max: 1.5 },
+      { name: "Legal / Privacy / Cookie", desc: "Compliance pages template (GCC data-residency context).", min: 2, max: 3, tbc: true },
+    ],
+  },
+  { name: "Interactivity & Micro-animations", work: true, tag: "Animation", sections: [
+      { name: "Transitions & parallax", desc: "Section transitions, scroll depth (site-wide).", min: 4, max: 7 },
+      { name: "Micro-interactions",     desc: "Hover, buttons, form feedback, counter easing, reveals.", min: 4, max: 7 },
+    ],
+  },
+  { name: "Motion Prototypes", work: true, tag: "Animation", sections: [
+      { name: "Live coded prototypes", desc: "Animated code demos of key blocks (hero, filter, counters) handed to the dev team during design, so the build matches intent — no surprises.", min: 6, max: 10 },
+    ],
+  },
+  { name: "Bilingual (Arabic-first / RTL)", work: true, tag: "Localization", sections: [
+      { name: "Arabic-first RTL design pass", desc: "Mirrored RTL layouts, Arabic typography, bidi handling across all templates. Auto-calculated 25–35% of the base scope.", computed: true, pctMin: 0.25, pctMax: 0.35 },
+    ],
+  },
+  { name: "Adaptive Design", work: true, tag: "Responsive", sections: [
+      { name: "Tablet & mobile (all pages)", desc: "Tablet + mobile layouts across all pages. Auto-calculated 20–30% of the base scope.", computed: true, pctMin: 0.20, pctMax: 0.30 },
+    ],
+  },
+  { name: "Build, CMS & Integrations", excluded: true, sections: [
+      { name: "Front-end build & CMS",   desc: "Headless / CMS theming, role-based governance matrix, clean editor UX. Built with SRACO ITC.", min: 60, max: 100 },
+      { name: "ERP / CRM / analytics",   desc: "CRM lead routing, future ERP feeds (News & Careers), GA4 / GTM / Maps API.", min: 24, max: 40 },
+      { name: "Hosting, CDN, security & VAPT", desc: "GCC hosting (AWS Bahrain / Azure UAE), CDN, SSL / WAF, OWASP, pre-launch VAPT.", min: 20, max: 40 },
+    ],
+  },
+];
+
+/* ─── Helpers ────────────────────────────────────────────────── */
+const fmtH = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
+const fmtUSD = (n) => "$" + Math.round(n).toLocaleString("en-US");
+const sumSecs = (secs) => secs.reduce((a, s) => [a[0] + s.min, a[1] + s.max], [0, 0]);
+
+let grandMin = 0, grandMax = 0, sectionCount = 0, pageCount = 0;
+
+function badges(s) {
+  let h = "";
+  if (s.tbc) h += `<i class="b-tbc">TBC</i>`;
+  if (s.p2)  h += `<i class="b-p2">P2</i>`;
+  if (s.sep) h += `<i class="b-sep">SEP</i>`;
+  return h ? `<span class="tile__badges">${h}</span>` : "";
+}
+
+function tilesHTML(sections) {
+  return sections.map((s) => `
+    <div class="tile">
+      <div class="tile__row">
+        <span class="tile__name">${s.name}${badges(s)}</span>
+        <span class="tile__hours">${fmtH(s.min)}–${fmtH(s.max)}<small>h</small></span>
+      </div>
+      ${s.desc ? `<div class="tile__desc">${s.desc}</div>` : ""}
+    </div>`).join("");
+}
+
+const KIND_LABEL = { subpage: "Subpage", popup: "Popup", system: "System", work: "Scope" };
+
+function nodeHTML({ num, kind, tag, name, sections, cls, p2, excluded }) {
+  const [mn, mx] = sumSecs(sections);
+  if (!excluded) { grandMin += mn; grandMax += mx; sectionCount += sections.length; }
+  const bd = [];
+  if (kind) bd.push(`<span class="node__badge node__badge--${kind}">${tag || KIND_LABEL[kind] || kind}</span>`);
+  if (p2)   bd.push(`<span class="node__badge node__badge--p2">Phase 2</span>`);
+  if (excluded) bd.push(`<span class="node__badge node__badge--excl">Out of design scope</span>`);
+  const sub = excluded
+    ? `<span class="node__sub node__sub--excl">${fmtH(mn)}–${fmtH(mx)}h · excl.</span>`
+    : `<span class="node__sub">${fmtH(mn)}–${fmtH(mx)}h</span>`;
+  return `
+    <div class="node ${cls || ""}${excluded ? " is-excluded" : ""}">
+      <div class="node__head">
+        <div class="node__headtop">
+          ${num ? `<span class="node__num">${num}</span>` : ""}
+          <span class="node__name" title="${name}">${name}</span>
+          ${sub}
+        </div>
+        ${bd.length ? `<div class="node__badges">${bd.join("")}</div>` : ""}
+      </div>
+      <div class="node__sections">${tilesHTML(sections)}</div>
+    </div>`;
+}
+
+/* ─── Pre-pass: fill computed sections (RTL & Adaptive = pct of base) ─ */
+let baseMin = 0, baseMax = 0;
+SITEMAP.forEach((p) => {
+  if (p.excluded) return;   // excluded columns feed neither the estimate nor the % base
+  [...p.sections, ...((p.children || []).flatMap((c) => c.sections))]
+    .forEach((s) => { if (!s.computed) { baseMin += s.min; baseMax += s.max; } });
+});
+SITEMAP.forEach((p) => {
+  [...p.sections, ...((p.children || []).flatMap((c) => c.sections))]
+    .forEach((s) => { if (s.computed) { s.min = Math.round(baseMin * s.pctMin * 2) / 2; s.max = Math.round(baseMax * s.pctMax * 2) / 2; } });
+});
+
+/* ─── Render board ───────────────────────────────────────────── */
+const board = document.getElementById("board");
+let pageIndex = 0;
+SITEMAP.forEach((page) => {
+  pageCount += 1;
+  let nodeArgs;
+  if (page.work) {
+    nodeArgs = { kind: "work", tag: page.tag, name: page.name, sections: page.sections, cls: "is-work", p2: page.p2 };
+  } else if (page.system) {
+    nodeArgs = { kind: "system", name: page.name, sections: page.sections, cls: "is-system", p2: page.p2 };
+  } else {
+    pageIndex += 1;
+    nodeArgs = { num: String(pageIndex).padStart(2, "0"), name: page.name, sections: page.sections, p2: page.p2, excluded: page.excluded };
+  }
+
+  let col = `<div class="column">`;
+  col += nodeHTML(nodeArgs);
+  (page.children || []).forEach((child) => {
+    pageCount += 1;
+    col += `<div class="connector${child.kind === "popup" ? " connector--popup" : ""}"></div>`;
+    col += nodeHTML({ kind: child.kind, name: child.name, sections: child.sections, cls: "is-child", p2: child.p2 });
+  });
+  col += `</div>`;
+  board.insertAdjacentHTML("beforeend", col);
+});
+
+/* ─── Drag-to-pan horizontal scroll (grab & drag the board) ──── */
+(() => {
+  let down = false, startX = 0, startScroll = 0, moved = 0;
+  board.addEventListener("pointerdown", (e) => {
+    if (e.target.closest("a, button")) return;
+    down = true; moved = 0;
+    startX = e.clientX; startScroll = board.scrollLeft;
+    board.setPointerCapture(e.pointerId);
+    board.style.cursor = "grabbing";
+    board.style.userSelect = "none";
+  });
+  board.addEventListener("pointermove", (e) => {
+    if (!down) return;
+    const dx = e.clientX - startX;
+    moved = Math.max(moved, Math.abs(dx));
+    board.scrollLeft = startScroll - dx;
+  });
+  const end = () => { down = false; board.style.cursor = ""; board.style.userSelect = ""; };
+  board.addEventListener("pointerup", end);
+  board.addEventListener("pointercancel", end);
+  board.addEventListener("click", (e) => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);
+})();
+
+/* ─── Totals ─────────────────────────────────────────────────── */
+const subMin = grandMin * CONFIG.rate, subMax = grandMax * CONFIG.rate;
+const commMin = subMin * CONFIG.commentsMin, commMax = subMax * CONFIG.commentsMax;
+const mgmtMin = subMin * CONFIG.mgmtMin,     mgmtMax = subMax * CONFIG.mgmtMax;
+const totMin = subMin + commMin + mgmtMin,   totMax = subMax + commMax + mgmtMax;
+const daysMin = Math.ceil(grandMin / CONFIG.hoursPerDay);
+const daysMax = Math.ceil(grandMax / CONFIG.hoursPerDay);
+
+document.getElementById("rollup").innerHTML = `
+  <div class="stat"><div class="stat__label">Pages / nodes</div><div class="stat__value">${pageCount}</div></div>
+  <div class="stat"><div class="stat__label">Sections</div><div class="stat__value">${sectionCount}</div></div>
+  <div class="stat"><div class="stat__label">Hours</div><div class="stat__value">${fmtH(grandMin)}–${fmtH(grandMax)}</div></div>
+  <div class="stat"><div class="stat__label">Working days</div><div class="stat__value">${daysMin}–${daysMax}</div></div>`;
+
+const pctLabel = (a, b) => (a === b ? `${a * 100}%` : `${a * 100}–${b * 100}%`);
+document.getElementById("breakdownBody").innerHTML = `
+  <tr><td>Subtotal (${fmtH(grandMin)}–${fmtH(grandMax)} hrs)</td><td>${fmtUSD(subMin)}</td><td>${fmtUSD(subMax)}</td></tr>
+  <tr><td>Comments & unplanned work (${pctLabel(CONFIG.commentsMin, CONFIG.commentsMax)})</td><td>${fmtUSD(commMin)}</td><td>${fmtUSD(commMax)}</td></tr>
+  <tr><td>Management & communication (${pctLabel(CONFIG.mgmtMin, CONFIG.mgmtMax)})</td><td>${fmtUSD(mgmtMin)}</td><td>${fmtUSD(mgmtMax)}</td></tr>
+  <tr class="is-total"><td>Total estimate</td><td><small class="mm">min</small> ${fmtUSD(totMin)}</td><td><small class="mm">max</small> ${fmtUSD(totMax)}</td></tr>`;
+</script>
+
+<script defer src="../shared/service-menu.js"></script>
+</body>
+</html>
