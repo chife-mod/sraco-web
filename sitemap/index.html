@@ -341,8 +341,14 @@ const CONFIG = { rate: 30, commentsMin: 0.15, commentsMax: 0.20, mgmtMin: 0.10, 
 
 const SITEMAP = [
   { name: "Concept", work: true, tag: "Design", sections: [
-      { name: "Visual direction",   desc: "Look & feel, enterprise typography, colour system, layout language — premium, government-grade, not 'startup / SaaS'.", min: 12, max: 16 },
+      { name: "Visual direction",   desc: "Look & feel, enterprise typography, colour system, layout language — premium, government-grade, photography-forward (refs: Mace Group, Aramco Digital).", min: 12, max: 16 },
+      { name: "Concept directions (2–3 total)", desc: "1–2 additional visual directions on top of the baseline — SOW requires 2–3 concepts presented for Marketing approval.", min: 8, max: 14 },
+      { name: "Design system", desc: "Typography, colours, components, grid — packaged for IT implementation review (SOW Phase 2 deliverable).", min: 8, max: 12 },
       { name: "Signature visual & motion teaser", desc: "Direction teaser for the flagship hero + key motion (not the full animation).", min: 5, max: 7 },
+    ],
+  },
+  { name: "Wireframes", work: true, tag: "UX", sections: [
+      { name: "Key-page wireframes (EN + AR)", desc: "All key templates, desktop + mobile, both languages — approved by Marketing before visual design starts (SOW Phase 1 deliverable).", min: 14, max: 20 },
     ],
   },
   { name: "Signature Hero & Motion", work: true, tag: "Animation", sections: [
@@ -360,16 +366,16 @@ const SITEMAP = [
       { name: "Featured projects carousel", desc: "(1–2 layouts) Cross-division highlights.", min: 3, max: 4 },
       { name: "Client logo strip",      desc: "Trust strip of key clients.", min: 1.5, max: 2 },
       { name: "Latest news",            desc: "News / announcements teaser row.", min: 2, max: 3 },
-      { name: "Primary CTA band",       desc: "Lead-capture call to action.", min: 1.5, max: 2 },
+      { name: "Primary CTA band",       desc: "Persistent 'Contact Us' / 'Request a Proposal' pattern (repeats on every key page).", min: 1.5, max: 2 },
       { name: "Footer",                 desc: "Navigation, offices, social, legal, language.", min: 3, max: 4 },
     ],
   },
   { name: "About SRACO", sections: [
       { name: "About hero",              desc: "Who SRACO is — intro + key visual.", min: 2, max: 3 },
       { name: "History timeline",        desc: "Interactive milestones of the group.", min: 3, max: 5 },
-      { name: "Corporate values",        desc: "Values / principles block.", min: 2, max: 3 },
+      { name: "Corporate values",        desc: "Vision, Mission & Values — Vision 2030 alignment, Saudization commitment.", min: 2, max: 3 },
       { name: "Leadership profiles",     desc: "Executive bios + photography grid.", min: 3, max: 4 },
-      { name: "Certifications",          desc: "Accreditations & trust block.", min: 2, max: 3 },
+      { name: "Certifications",          desc: "ISO, IKTVA, awards, compliance credentials.", min: 2, max: 3 },
       { name: "Geographic footprint map", desc: "KSA + regional expansion map.", min: 3, max: 4 },
     ],
   },
@@ -456,7 +462,9 @@ const SITEMAP = [
   },
   { name: "Contact", sections: [
       { name: "Contact hero",             desc: "Get-in-touch intro.", min: 1.5, max: 2 },
-      { name: "Division-routing form",    desc: "Conditional routing: select division / service → routed fields + confirmation, pushed to the right commercial team.", min: 5, max: 7, sep: true },
+      { name: "Division-routing form",    desc: "Conditional routing: select division / service → routed fields, pushed to the right commercial team (feeds CRM).", min: 5, max: 7, sep: true },
+      { name: "RFP / 'Get a Quote' flow", desc: "Structured lead-qualifying flow — enough to qualify the lead, short enough not to lose it.", min: 4, max: 6, sep: true },
+      { name: "Thank-you / confirmation pages", desc: "Trackable conversion confirmations after each form (GA4 funnel events).", min: 1.5, max: 2 },
       { name: "Office locations + Google Maps", desc: "Multi-office locations with embedded map.", min: 3, max: 4 },
       { name: "Departments / direct contacts", desc: "Direct department contacts.", min: 1.5, max: 2 },
     ],
