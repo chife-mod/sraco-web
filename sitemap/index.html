@@ -85,6 +85,19 @@ body {
   letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.45); margin-bottom: 20px;
 }
 
+/* ─── Version tabs (V1 / V2) — segmented control ─────────────── */
+.vtabs { display: inline-flex; gap: 6px; margin-top: 28px; padding: 5px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; }
+.vtab { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 210px; padding: 12px 18px; text-align: left; background: transparent; border: 1px solid transparent; border-radius: 10px; color: inherit; cursor: pointer; font-family: inherit; transition: background 180ms ease, border-color 180ms ease; }
+.vtab:hover { background: rgba(255,255,255,0.04); }
+.vtab.is-active { background: rgba(75,108,255,0.14); border-color: rgba(75,108,255,0.4); }
+.vtab__k { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand-blue-light); }
+.vtab.is-active .vtab__k { color: #c3cdff; }
+.vtab__l { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.vtab__s { font-size: 11.5px; color: rgba(255,255,255,0.5); font-variant-numeric: tabular-nums; }
+.vtab.is-active .vtab__s { color: rgba(195,205,255,0.85); }
+@media (max-width: 560px) { .vtabs { display: flex; width: 100%; } .vtab { flex: 1; min-width: 0; } }
+.vnote { margin-top: 16px; font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.6); max-width: 760px; }
+
 /* Stages strip */
 .stages-wrap { margin-top: 8px; }
 .stages { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
@@ -276,6 +289,9 @@ body {
     </p>
   </header>
 
+  <div class="vtabs" id="vtabs" role="tablist" aria-label="Estimate version"></div>
+  <p class="vnote" id="vnote"></p>
+
   <div class="legend">
     <span><i class="b-tbc">TBC</i> needs clarification</span>
     <span><i class="b-p2">P2</i> phase 2</span>
@@ -293,7 +309,7 @@ body {
 
 <!-- ESTIMATE after — see the work before the price -->
 <div class="wrap estimate">
-  <h2 class="estimate__title">Estimate</h2>
+  <h2 class="estimate__title" id="estTitle">Estimate</h2>
 
   <div class="rollup" id="rollup"></div>
 
@@ -362,7 +378,7 @@ const CONFIG = { rate: 30, commentsMin: 0.10, commentsMax: 0.15, mgmtMin: 0.10, 
 /* Client-facing rollup figures — pages & sections the client sees (NOT internal work blocks/tiles). Tune to the brief. */
 const PROJECT_META = { pages: 13, screens: 66 };
 
-const SITEMAP = [
+const BASE_SITEMAP = [
   { name: "Design Concept", work: true, tag: "Design",
     caption: `<strong>Stage 1 — 100% prepaid.</strong> We lock the visual direction on real screens before designing every page. Premium, photography-forward, government-grade — not "startup / SaaS".`,
     sections: [
@@ -540,6 +556,14 @@ const SITEMAP = [
   },
 ];
 
+/* ─── Versions registry — board + estimate re-render from here.
+   V1 = baseline (as first sent), V2 = current/active. Both share BASE_SITEMAP
+   for now (identical); when the client comments, give V2 its own array with the edits. */
+const VERSIONS = {
+  v1: { key: "V1", label: "Initial",  note: "First version, prepared from the brief & SOW — kept as the baseline you first sent.", sitemap: BASE_SITEMAP },
+  v2: { key: "V2", label: "Current",  note: "Latest version (active by default). Mirrors V1 for now — it will carry the revisions after your comments.", sitemap: BASE_SITEMAP },
+};
+
 /* ─── Helpers ────────────────────────────────────────────────── */
 const fmtH = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 const fmtUSD = (n) => "$" + Math.round(n).toLocaleString("en-US");
@@ -597,36 +621,36 @@ function nodeHTML({ num, kind, tag, name, sections, cls, p2, excluded, caption }
     </div>`;
 }
 
-/* ─── Pre-pass: fill computed sections ─────────────────────────
-   Two % bases:
-   - full base  = everything billable (work blocks + pages)
-   - pages base = page-design columns only (no concepts / wireframes /
-     animation work blocks) — used when a computed section sets basis:"pages" */
-let baseMin = 0, baseMax = 0, pagesMin = 0, pagesMax = 0;
-SITEMAP.forEach((p) => {
-  if (p.excluded) return;   // excluded columns feed neither the estimate nor the % base
-  [...p.sections, ...((p.children || []).flatMap((c) => c.sections))]
-    .forEach((s) => {
-      if (s.computed) return;
-      baseMin += s.min; baseMax += s.max;
-      if (!p.work) { pagesMin += s.min; pagesMax += s.max; }
-    });
-});
-SITEMAP.forEach((p) => {
-  [...p.sections, ...((p.children || []).flatMap((c) => c.sections))]
-    .forEach((s) => {
-      if (!s.computed) return;
-      const bMin = s.basis === "pages" ? pagesMin : baseMin;
-      const bMax = s.basis === "pages" ? pagesMax : baseMax;
-      s.min = Math.round(bMin * s.pctMin * 2) / 2;
-      s.max = Math.round(bMax * s.pctMax * 2) / 2;
-    });
-});
+/* ─── Pre-pass helper: fill computed sections (RTL/Adaptive = % of base / pages-base) ─── */
+function fillComputed(sitemap) {
+  let baseMin = 0, baseMax = 0, pagesMin = 0, pagesMax = 0;
+  sitemap.forEach((p) => {
+    if (p.excluded) return;
+    [...p.sections, ...((p.children || []).flatMap((c) => c.sections))]
+      .forEach((s) => { if (s.computed) return; baseMin += s.min; baseMax += s.max; if (!p.work) { pagesMin += s.min; pagesMax += s.max; } });
+  });
+  sitemap.forEach((p) => {
+    [...p.sections, ...((p.children || []).flatMap((c) => c.sections))]
+      .forEach((s) => { if (!s.computed) return; const bMin = s.basis === "pages" ? pagesMin : baseMin; const bMax = s.basis === "pages" ? pagesMax : baseMax; s.min = Math.round(bMin * s.pctMin * 2) / 2; s.max = Math.round(bMax * s.pctMax * 2) / 2; });
+  });
+}
+function grandHours(sitemap) {
+  let gMin = 0, gMax = 0;
+  sitemap.forEach((p) => { if (p.excluded) return; const [a, b] = sumSecs(p.sections); gMin += a; gMax += b; (p.children || []).forEach((c) => { if (c.excluded) return; const [x, y] = sumSecs(c.sections); gMin += x; gMax += y; }); });
+  return [gMin, gMax];
+}
 
-/* ─── Render board ───────────────────────────────────────────── */
 const board = document.getElementById("board");
+
+/* ─── Render one version: board + rollup + breakdown (re-runs on tab switch) ─── */
+function renderVersion(vid) {
+const V = VERSIONS[vid];
+const sitemap = structuredClone(V.sitemap);
+fillComputed(sitemap);
+grandMin = 0; grandMax = 0; sectionCount = 0; pageCount = 0; blocks.length = 0;
+board.innerHTML = "";
 let pageIndex = 0;
-SITEMAP.forEach((page) => {
+sitemap.forEach((page) => {
   pageCount += 1;
   let nodeArgs;
   if (page.work) {
@@ -648,6 +672,36 @@ SITEMAP.forEach((page) => {
   col += `</div>`;
   board.insertAdjacentHTML("beforeend", col);
 });
+
+const subMin = grandMin * CONFIG.rate, subMax = grandMax * CONFIG.rate;
+const commMin = subMin * CONFIG.commentsMin, commMax = subMax * CONFIG.commentsMax;
+const mgmtMin = subMin * CONFIG.mgmtMin,     mgmtMax = subMax * CONFIG.mgmtMax;
+const totMin = subMin + commMin + mgmtMin,   totMax = subMax + commMax + mgmtMax;
+const daysMin = Math.ceil(grandMin / CONFIG.hoursPerDay);
+const daysMax = Math.ceil(grandMax / CONFIG.hoursPerDay);
+
+document.getElementById("estTitle").textContent = `Estimate — ${V.key} · ${V.label}`;
+document.getElementById("vnote").textContent = V.note;
+
+document.getElementById("rollup").innerHTML = `
+  <div class="stat"><div class="stat__label">Pages</div><div class="stat__value">${PROJECT_META.pages}</div></div>
+  <div class="stat"><div class="stat__label">Sections</div><div class="stat__value">${PROJECT_META.screens}</div></div>
+  <div class="stat"><div class="stat__label">Hours</div><div class="stat__value">${fmtH(grandMin)}–${fmtH(grandMax)}</div></div>
+  <div class="stat"><div class="stat__label">Working days</div><div class="stat__value">${daysMin}–${daysMax}</div></div>
+  <div class="stat stat--accent"><div class="stat__label">Total</div><div class="stat__value">${fmtUSD(totMin)}–<small>${fmtUSD(totMax)}</small></div></div>`;
+
+const pctLabel = (a, b) => (a === b ? `${a * 100}%` : `${a * 100}–${b * 100}%`);
+const blockRows = blocks.map((b) => `
+  <tr><td>${b.name} (${fmtH(b.mn)}–${fmtH(b.mx)} hrs)</td><td>${fmtUSD(b.mn * CONFIG.rate)}</td><td>${fmtUSD(b.mx * CONFIG.rate)}</td></tr>`).join("");
+document.getElementById("breakdownBody").innerHTML = `
+  ${blockRows}
+  <tr class="row-sub"><td>Subtotal (${fmtH(grandMin)}–${fmtH(grandMax)} hrs × $${CONFIG.rate}/h)</td><td>${fmtUSD(subMin)}</td><td>${fmtUSD(subMax)}</td></tr>
+  <tr><td>Comments & unplanned work (${pctLabel(CONFIG.commentsMin, CONFIG.commentsMax)})</td><td>${fmtUSD(commMin)}</td><td>${fmtUSD(commMax)}</td></tr>
+  <tr><td>Management & communication (${pctLabel(CONFIG.mgmtMin, CONFIG.mgmtMax)})</td><td>${fmtUSD(mgmtMin)}</td><td>${fmtUSD(mgmtMax)}</td></tr>
+  <tr class="is-total"><td>Total estimate</td><td><small class="mm">min</small> ${fmtUSD(totMin)}</td><td><small class="mm">max</small> ${fmtUSD(totMax)}</td></tr>`;
+
+document.querySelectorAll(".vtab").forEach((b) => b.classList.toggle("is-active", b.dataset.v === vid));
+}
 
 /* ─── Drag-to-pan horizontal scroll (grab & drag the board) ──── */
 (() => {
@@ -672,30 +726,29 @@ SITEMAP.forEach((page) => {
   board.addEventListener("click", (e) => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);
 })();
 
-/* ─── Totals ─────────────────────────────────────────────────── */
-const subMin = grandMin * CONFIG.rate, subMax = grandMax * CONFIG.rate;
-const commMin = subMin * CONFIG.commentsMin, commMax = subMax * CONFIG.commentsMax;
-const mgmtMin = subMin * CONFIG.mgmtMin,     mgmtMax = subMax * CONFIG.mgmtMax;
-const totMin = subMin + commMin + mgmtMin,   totMax = subMax + commMax + mgmtMax;
-const daysMin = Math.ceil(grandMin / CONFIG.hoursPerDay);
-const daysMax = Math.ceil(grandMax / CONFIG.hoursPerDay);
-
-document.getElementById("rollup").innerHTML = `
-  <div class="stat"><div class="stat__label">Pages</div><div class="stat__value">${PROJECT_META.pages}</div></div>
-  <div class="stat"><div class="stat__label">Sections</div><div class="stat__value">${PROJECT_META.screens}</div></div>
-  <div class="stat"><div class="stat__label">Hours</div><div class="stat__value">${fmtH(grandMin)}–${fmtH(grandMax)}</div></div>
-  <div class="stat"><div class="stat__label">Working days</div><div class="stat__value">${daysMin}–${daysMax}</div></div>
-  <div class="stat stat--accent"><div class="stat__label">Total</div><div class="stat__value">${fmtUSD(totMin)}–<small>${fmtUSD(totMax)}</small></div></div>`;
-
-const pctLabel = (a, b) => (a === b ? `${a * 100}%` : `${a * 100}–${b * 100}%`);
-const blockRows = blocks.map((b) => `
-  <tr><td>${b.name} (${fmtH(b.mn)}–${fmtH(b.mx)} hrs)</td><td>${fmtUSD(b.mn * CONFIG.rate)}</td><td>${fmtUSD(b.mx * CONFIG.rate)}</td></tr>`).join("");
-document.getElementById("breakdownBody").innerHTML = `
-  ${blockRows}
-  <tr class="row-sub"><td>Subtotal (${fmtH(grandMin)}–${fmtH(grandMax)} hrs × $${CONFIG.rate}/h)</td><td>${fmtUSD(subMin)}</td><td>${fmtUSD(subMax)}</td></tr>
-  <tr><td>Comments & unplanned work (${pctLabel(CONFIG.commentsMin, CONFIG.commentsMax)})</td><td>${fmtUSD(commMin)}</td><td>${fmtUSD(commMax)}</td></tr>
-  <tr><td>Management & communication (${pctLabel(CONFIG.mgmtMin, CONFIG.mgmtMax)})</td><td>${fmtUSD(mgmtMin)}</td><td>${fmtUSD(mgmtMax)}</td></tr>
-  <tr class="is-total"><td>Total estimate</td><td><small class="mm">min</small> ${fmtUSD(totMin)}</td><td><small class="mm">max</small> ${fmtUSD(totMax)}</td></tr>`;
+/* ─── Version tabs (V1 / V2) + #hash deep-link · default = LATEST version ─── */
+const vtabs = document.getElementById("vtabs");
+function tabSummary(vid) {
+  const s = structuredClone(VERSIONS[vid].sitemap);
+  fillComputed(s);
+  const [gMin, gMax] = grandHours(s);
+  const tMin = gMin * CONFIG.rate * (1 + CONFIG.commentsMin + CONFIG.mgmtMin);
+  const tMax = gMax * CONFIG.rate * (1 + CONFIG.commentsMax + CONFIG.mgmtMax);
+  const dMin = Math.ceil(gMin / CONFIG.hoursPerDay), dMax = Math.ceil(gMax / CONFIG.hoursPerDay);
+  return `${fmtUSD(tMin)}–${fmtUSD(tMax)} · ${dMin}–${dMax} days`;
+}
+Object.keys(VERSIONS).forEach((vid) => {
+  const V = VERSIONS[vid];
+  const btn = document.createElement("button");
+  btn.type = "button"; btn.className = "vtab"; btn.dataset.v = vid; btn.setAttribute("role", "tab");
+  btn.innerHTML = `<span class="vtab__k">${V.key}</span><span class="vtab__l">${V.label}</span><span class="vtab__s">${tabSummary(vid)}</span>`;
+  btn.addEventListener("click", () => { location.hash = vid; renderVersion(vid); });
+  vtabs.appendChild(btn);
+});
+const vorder = Object.keys(VERSIONS);
+const hashV = location.hash.replace("#", "");
+renderVersion(hashV in VERSIONS ? hashV : vorder[vorder.length - 1]);
+window.addEventListener("hashchange", () => { const v = location.hash.replace("#", ""); if (v in VERSIONS) renderVersion(v); });
 </script>
 
 <script defer src="../shared/service-menu.js"></script>
