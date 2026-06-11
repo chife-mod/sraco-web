@@ -106,6 +106,10 @@ body {
 .stage-card__pay { font-size: 9px; font-weight: 600; letter-spacing: 0.05em; color: #c3cdff; background: rgba(75,108,255,0.16); border: 1px solid rgba(75,108,255,0.4); border-radius: 4px; padding: 2px 6px; text-transform: none; }
 .stage-card__t { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin: 10px 0 6px; }
 .stage-card__d { font-size: 12.5px; line-height: 1.45; color: rgba(255,255,255,0.5); }
+.stage-card--total { background: linear-gradient(180deg, rgba(75,108,255,0.16) 0%, rgba(75,108,255,0.06) 100%); border-color: rgba(75,108,255,0.4); }
+.stage-card--total .stage-card__t { color: #c3cdff; }
+.timeline-note { margin-top: 18px; font-size: 12.5px; line-height: 1.55; color: rgba(255,255,255,0.5); max-width: 820px; }
+.timeline-note strong { color: rgba(255,255,255,0.7); font-weight: 600; }
 
 /* ─── Notice + legend ────────────────────────────────────────── */
 
@@ -150,6 +154,9 @@ body {
 .stat__value { font-size: 25px; font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; line-height: 1; }
 .stat__value small { font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.5); }
 .stat--accent .stat__value { color: #c3cdff; }
+.stat__sub { margin-top: 7px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.5); font-variant-numeric: tabular-nums; }
+.stat--accent .stat__sub { color: rgba(195,205,255,0.72); }
+.stat__mm { font-size: 11px; font-weight: 500; opacity: 0.6; margin-right: 4px; }
 
 /* ─── Horizontal sitemap board ───────────────────────────────── */
 
@@ -289,9 +296,6 @@ body {
     </p>
   </header>
 
-  <div class="vtabs" id="vtabs" role="tablist" aria-label="Estimate version"></div>
-  <p class="vnote" id="vnote"></p>
-
   <div class="legend">
     <span><i class="b-tbc">TBC</i> needs clarification</span>
     <span><i class="b-p2">P2</i> phase 2</span>
@@ -318,9 +322,40 @@ body {
     <tbody id="breakdownBody"></tbody>
   </table>
   <div class="breakdown__notes">
+    <p><strong>Preliminary figure</strong> — the final estimate is confirmed once the website sitemap and wireframes are approved.</p>
     <p><strong>Comments &amp; unplanned work</strong> — design iterations after each delivery. <strong>Two revision rounds per stage are included</strong>; further rounds are billed hourly at the same rate.</p>
     <p><strong>Management &amp; communication</strong> — project management, calls, and coordination with SRACO's marketing, content owners and ITC.</p>
   </div>
+</div>
+
+<!-- Timeline — design phase (answers "how fast", not just "how much") -->
+<div class="wrap stages-wrap">
+  <h2 class="estimate__title">Timeline — design phase</h2>
+  <div class="stages">
+    <div class="stage-card">
+      <span class="stage-card__n">Phase 1 <span class="stage-card__pay">1.5–2 weeks</span></span>
+      <div class="stage-card__t">Discovery + Wireframes</div>
+      <div class="stage-card__d">Structure of every key template — desktop + mobile, EN + AR — approved before visual design starts.</div>
+    </div>
+    <div class="stage-card">
+      <span class="stage-card__n">Phase 2 <span class="stage-card__pay">3–4 weeks</span></span>
+      <div class="stage-card__t">Visual Design</div>
+      <div class="stage-card__d">Three concepts → the key templates → every page, desktop and mobile.</div>
+    </div>
+    <div class="stage-card">
+      <span class="stage-card__n">Parallel <span class="stage-card__pay">alongside</span></span>
+      <div class="stage-card__t">Company pages ×5 · RTL</div>
+      <div class="stage-card__d">The five company pages and the Arabic-first / RTL mirror run in parallel over approved layouts — paced by your content and approvals.</div>
+    </div>
+    <div class="stage-card stage-card--total">
+      <span class="stage-card__n">Total <span class="stage-card__pay">6–8 weeks</span></span>
+      <div class="stage-card__t">Design phase</div>
+      <div class="stage-card__d">End to end — with parallel streams and timely content from SRACO's side.</div>
+    </div>
+  </div>
+  <p class="timeline-note">
+    <strong>Preliminary timeline</strong> — the design phase completes in approximately <strong>6–8 weeks</strong> with timely content delivery and consolidated feedback from your side. Late content, extended review cycles, or added scope (e.g. a 6th company or a new concept direction) shift the timeline accordingly. Front-end build, CMS and integrations (Part 2) are scoped and timed separately.
+  </p>
 </div>
 
 <!-- Stages -->
@@ -359,7 +394,7 @@ body {
 <div class="wrap">
   <div class="notice notice--foot">
     <svg viewBox="0 0 24 24" fill="none"><path d="M12 9v4m0 4h.01M10.3 3.86 1.82 18a2 2 0 0 0 1.7 3h16.96a2 2 0 0 0 1.7-3L13.7 3.86a2 2 0 0 0-3.42 0Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span><strong>Preliminary estimate</strong> — design + animation only. Hours cover both languages (English + Arabic-first / RTL) and all breakpoints (desktop, tablet, mobile). The min–max range depends on the complexity of each block / section and is finalised after the page and block structure is approved. Working days are production only — they exclude possible management, comments or rework. <strong>Front-end build, CMS, ERP / CRM integrations, hosting, security and VAPT are out of design scope</strong> and handled with SRACO ITC (shown for context, not included in the figure). <strong>Video generation is not included</strong> — third-party generation / render services may be billed separately, with the amount known after the concept.</span>
+    <span><strong>Preliminary estimate</strong> — design + animation only. Hours cover both languages (English + Arabic-first / RTL) and all breakpoints (desktop, tablet, mobile). The min–max range depends on the complexity of each block / section and is finalised after the page and block structure is approved. The 6–8 week timeline is the design phase only and assumes timely content and consolidated feedback from SRACO's side. <strong>Front-end build, CMS, ERP / CRM integrations, hosting, security and VAPT are out of design scope</strong> and handled with SRACO ITC (shown for context, not included in the figure). <strong>Video generation is not included</strong> — third-party generation / render services may be billed separately, with the amount known after the concept.</span>
   </div>
 </div>
 <div class="footer-pad"></div>
@@ -375,6 +410,10 @@ body {
    ─────────────────────────────────────────────────────────────── */
 const CONFIG = { rate: 30, commentsMin: 0.10, commentsMax: 0.15, mgmtMin: 0.10, mgmtMax: 0.10, hoursPerDay: 6 };
 
+/* Client-facing delivery timeline — CALENDAR weeks (parallel streams + client-owned content),
+   deliberately NOT hours/hoursPerDay. Single source for the rollup stat + version tabs. */
+const TIMELINE_WEEKS = "6–8";
+
 /* Client-facing rollup figures — pages & sections the client sees (NOT internal work blocks/tiles). Tune to the brief. */
 const PROJECT_META = { pages: 13, screens: 66 };
 
@@ -385,7 +424,6 @@ const BASE_SITEMAP = [
       { name: "Concept direction 1", desc: "Hero + 1–2 more sections — the first design concept shown on real screens. Premium, photography-forward look (refs: Mace Group, Aramco Digital).", min: 15, max: 21 },
       { name: "Concept direction 2", desc: "Same screens (hero + 1–2 sections), a clearly different direction — so the choice between concepts is a real one.", min: 12, max: 14 },
       { name: "Concept direction 3", desc: "Same screens, third direction (SOW asks for 2–3 concepts — we present 3).", min: 12, max: 14 },
-      { name: "Design system", desc: "Typography, colours, components, grid, spacing — one source of truth for every page, packaged for the dev team.", min: 10, max: 16 },
       { name: "Photography art direction", desc: "The design stands on real project photography, not stock. We define the photographic style and review / select the client's imagery for every key page; a shot-list brief if new photography is needed.", min: 6, max: 10 },
       { name: "Main animation teaser", desc: "A short preview of the homepage hero animation — how it will look and move (the full animation comes later).", min: 5, max: 7 },
     ],
@@ -415,6 +453,11 @@ const BASE_SITEMAP = [
       { name: "Latest news",            desc: "News / announcements teaser row.", min: 2, max: 3 },
       { name: "Primary CTA band",       desc: "Persistent 'Contact Us' / 'Request a Proposal' pattern (repeats on every key page).", min: 1.5, max: 2 },
       { name: "Footer",                 desc: "Navigation, offices, social, legal, language.", min: 3, max: 4 },
+    ],
+  },
+  { name: "Design System", work: true, tag: "Design",
+    sections: [
+      { name: "Design system", desc: "Typography, colours, components, grid, spacing — one source of truth for every page, packaged for the dev team.", min: 10, max: 16 },
     ],
   },
   { name: "About SRACO", sections: [
@@ -534,7 +577,7 @@ const BASE_SITEMAP = [
     ],
   },
   { name: "Bilingual / RTL", work: true, tag: "Localization",
-    caption: `<strong>Arabic-first.</strong> Every template mirrored for RTL with Arabic typography and bidi handling, reviewed by a native speaker before sign-off. Flat 25% of the page-design volume.`,
+    caption: `<strong>Arabic-first — designed in English.</strong> We design in English (our working language) on RTL-aware layouts, then mirror every template to Arabic with full RTL typography, bidi handling and native-speaker review before sign-off — so Arabic stays the site's primary language, not an afterthought. Flat 25% of the page-design volume.`,
     sections: [
       { name: "Arabic-first RTL design pass", desc: "Mirrored RTL layouts, Arabic typography, bidi handling across all templates. Flat 25% of the page-design volume.", computed: true, basis: "pages", pctMin: 0.25, pctMax: 0.25 },
     ],
@@ -556,12 +599,38 @@ const BASE_SITEMAP = [
   },
 ];
 
-/* ─── Versions registry — board + estimate re-render from here.
-   V1 = baseline (as first sent), V2 = current/active. Both share BASE_SITEMAP
-   for now (identical); when the client comments, give V2 its own array with the edits. */
+/* ─── V2 timing cuts (Oleg's review 2026-06-11, after client pushback on the day count).
+   Override map: block name → section name → [min, max, newName?]. Anything not listed
+   keeps V1's hours. Review stopped at Careers → "Open positions directory" (the rest = V1). */
+const V2_OVERRIDES = {
+  "Design Concept": {
+    "Concept direction 1": [15, 20], "Concept direction 2": [6, 8], "Concept direction 3": [6, 8],
+    "Photography art direction": [6, 12], "Main animation teaser": [3, 6],
+  },
+  "Design System": { "Design system": [8, 12] },
+  "Wireframes": { "Key-page wireframes (EN + AR)": [16, 24] },
+  "Hero Animation": { "Idea & storyboard": [2, 4], "Hero animation design": [3, 6], "Featured projects animation": [3, 5] },
+  "Homepage": { "Hero": [0, 0, "Hero (from Concept)"], "Latest news": [1.5, 2] },
+  "Company Page ×5": { "Per-company content adaptation (×5)": [24, 28] },
+  "Solutions": { "Solutions hero": [3, 4], "Solutions grid": [3, 4], "Filter by division / sector": [1, 2], "CTA": [1, 1] },
+  "Projects Portfolio": { "Project grid / cards": [3, 5] },
+  "Case Study": { "Case hero": [3, 4], "Imagery gallery + zoom": [2, 3] },
+  "News & Media": { "Categories / filter": [1, 1], "Media gallery": [2, 3], "Share + related": [0.5, 0.5] },
+};
+function applyOverrides(sitemap, ov) {
+  const all = [];
+  sitemap.forEach((p) => { all.push(p); (p.children || []).forEach((c) => all.push(c)); });
+  all.forEach((b) => {
+    const o = ov[b.name]; if (!o) return;
+    b.sections.forEach((s) => { const r = o[s.name]; if (!r) return; s.min = r[0]; s.max = r[1]; if (r[2]) s.name = r[2]; });
+  });
+}
+const V2_SITEMAP = structuredClone(BASE_SITEMAP);
+applyOverrides(V2_SITEMAP, V2_OVERRIDES);
+
+/* ─── Versions registry — V1 = as first sent, V2 = trimmed timings (active). ─── */
 const VERSIONS = {
-  v1: { key: "V1", label: "Initial",  note: "First version, prepared from the brief & SOW — kept as the baseline you first sent.", sitemap: BASE_SITEMAP },
-  v2: { key: "V2", label: "Current",  note: "Latest version (active by default). Mirrors V1 for now — it will carry the revisions after your comments.", sitemap: BASE_SITEMAP },
+  v2: { key: "V2", label: "Trimmed",  note: "", sitemap: V2_SITEMAP },
 };
 
 /* ─── Helpers ────────────────────────────────────────────────── */
@@ -634,12 +703,6 @@ function fillComputed(sitemap) {
       .forEach((s) => { if (!s.computed) return; const bMin = s.basis === "pages" ? pagesMin : baseMin; const bMax = s.basis === "pages" ? pagesMax : baseMax; s.min = Math.round(bMin * s.pctMin * 2) / 2; s.max = Math.round(bMax * s.pctMax * 2) / 2; });
   });
 }
-function grandHours(sitemap) {
-  let gMin = 0, gMax = 0;
-  sitemap.forEach((p) => { if (p.excluded) return; const [a, b] = sumSecs(p.sections); gMin += a; gMax += b; (p.children || []).forEach((c) => { if (c.excluded) return; const [x, y] = sumSecs(c.sections); gMin += x; gMax += y; }); });
-  return [gMin, gMax];
-}
-
 const board = document.getElementById("board");
 
 /* ─── Render one version: board + rollup + breakdown (re-runs on tab switch) ─── */
@@ -677,18 +740,20 @@ const subMin = grandMin * CONFIG.rate, subMax = grandMax * CONFIG.rate;
 const commMin = subMin * CONFIG.commentsMin, commMax = subMax * CONFIG.commentsMax;
 const mgmtMin = subMin * CONFIG.mgmtMin,     mgmtMax = subMax * CONFIG.mgmtMax;
 const totMin = subMin + commMin + mgmtMin,   totMax = subMax + commMax + mgmtMax;
-const daysMin = Math.ceil(grandMin / CONFIG.hoursPerDay);
-const daysMax = Math.ceil(grandMax / CONFIG.hoursPerDay);
+// Detailed table shows ROUNDED-to-dollar line items, and its total is their SUM — so the column always
+// adds up exactly. Comments/mgmt land on x.5, so rounding each then summing avoids a phantom $1
+// mismatch vs the exact total. Headline tile (rollup) then floors that to a clean $100.
+const dispTotMin = Math.round(subMin) + Math.round(commMin) + Math.round(mgmtMin);
+const dispTotMax = Math.round(subMax) + Math.round(commMax) + Math.round(mgmtMax);
+const niceMin = Math.floor(dispTotMin / 100) * 100, niceMax = Math.floor(dispTotMax / 100) * 100;
 
-document.getElementById("estTitle").textContent = `Estimate — ${V.key} · ${V.label}`;
-document.getElementById("vnote").textContent = V.note;
+document.getElementById("estTitle").textContent = "Estimate";
 
 document.getElementById("rollup").innerHTML = `
   <div class="stat"><div class="stat__label">Pages</div><div class="stat__value">${PROJECT_META.pages}</div></div>
   <div class="stat"><div class="stat__label">Sections</div><div class="stat__value">${PROJECT_META.screens}</div></div>
-  <div class="stat"><div class="stat__label">Hours</div><div class="stat__value">${fmtH(grandMin)}–${fmtH(grandMax)}</div></div>
-  <div class="stat"><div class="stat__label">Working days</div><div class="stat__value">${daysMin}–${daysMax}</div></div>
-  <div class="stat stat--accent"><div class="stat__label">Total</div><div class="stat__value">${fmtUSD(totMin)}–<small>${fmtUSD(totMax)}</small></div></div>`;
+  <div class="stat"><div class="stat__label">Timeline</div><div class="stat__value">${TIMELINE_WEEKS}<small> weeks</small></div><div class="stat__sub">${Math.floor(grandMin)}–${Math.floor(grandMax)} hours</div></div>
+  <div class="stat stat--accent"><div class="stat__label">Total</div><div class="stat__value"><span class="stat__mm">min</span> ${fmtUSD(niceMin)}</div><div class="stat__sub"><span class="stat__mm">max</span> ${fmtUSD(niceMax)}</div></div>`;
 
 const pctLabel = (a, b) => (a === b ? `${a * 100}%` : `${a * 100}–${b * 100}%`);
 const blockRows = blocks.map((b) => `
@@ -698,9 +763,7 @@ document.getElementById("breakdownBody").innerHTML = `
   <tr class="row-sub"><td>Subtotal (${fmtH(grandMin)}–${fmtH(grandMax)} hrs × $${CONFIG.rate}/h)</td><td>${fmtUSD(subMin)}</td><td>${fmtUSD(subMax)}</td></tr>
   <tr><td>Comments & unplanned work (${pctLabel(CONFIG.commentsMin, CONFIG.commentsMax)})</td><td>${fmtUSD(commMin)}</td><td>${fmtUSD(commMax)}</td></tr>
   <tr><td>Management & communication (${pctLabel(CONFIG.mgmtMin, CONFIG.mgmtMax)})</td><td>${fmtUSD(mgmtMin)}</td><td>${fmtUSD(mgmtMax)}</td></tr>
-  <tr class="is-total"><td>Total estimate</td><td><small class="mm">min</small> ${fmtUSD(totMin)}</td><td><small class="mm">max</small> ${fmtUSD(totMax)}</td></tr>`;
-
-document.querySelectorAll(".vtab").forEach((b) => b.classList.toggle("is-active", b.dataset.v === vid));
+  <tr class="is-total"><td>Total estimate</td><td><small class="mm">min</small> ${fmtUSD(dispTotMin)}</td><td><small class="mm">max</small> ${fmtUSD(dispTotMax)}</td></tr>`;
 }
 
 /* ─── Drag-to-pan horizontal scroll (grab & drag the board) ──── */
@@ -726,29 +789,8 @@ document.querySelectorAll(".vtab").forEach((b) => b.classList.toggle("is-active"
   board.addEventListener("click", (e) => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);
 })();
 
-/* ─── Version tabs (V1 / V2) + #hash deep-link · default = LATEST version ─── */
-const vtabs = document.getElementById("vtabs");
-function tabSummary(vid) {
-  const s = structuredClone(VERSIONS[vid].sitemap);
-  fillComputed(s);
-  const [gMin, gMax] = grandHours(s);
-  const tMin = gMin * CONFIG.rate * (1 + CONFIG.commentsMin + CONFIG.mgmtMin);
-  const tMax = gMax * CONFIG.rate * (1 + CONFIG.commentsMax + CONFIG.mgmtMax);
-  const dMin = Math.ceil(gMin / CONFIG.hoursPerDay), dMax = Math.ceil(gMax / CONFIG.hoursPerDay);
-  return `${fmtUSD(tMin)}–${fmtUSD(tMax)} · ${dMin}–${dMax} days`;
-}
-Object.keys(VERSIONS).forEach((vid) => {
-  const V = VERSIONS[vid];
-  const btn = document.createElement("button");
-  btn.type = "button"; btn.className = "vtab"; btn.dataset.v = vid; btn.setAttribute("role", "tab");
-  btn.innerHTML = `<span class="vtab__k">${V.key}</span><span class="vtab__l">${V.label}</span><span class="vtab__s">${tabSummary(vid)}</span>`;
-  btn.addEventListener("click", () => { location.hash = vid; renderVersion(vid); });
-  vtabs.appendChild(btn);
-});
-const vorder = Object.keys(VERSIONS);
-const hashV = location.hash.replace("#", "");
-renderVersion(hashV in VERSIONS ? hashV : vorder[vorder.length - 1]);
-window.addEventListener("hashchange", () => { const v = location.hash.replace("#", ""); if (v in VERSIONS) renderVersion(v); });
+/* ─── Single estimate — V2. V1 archived to ARCHIVE-versions.md; version tabs removed 2026-06-11. ─── */
+renderVersion("v2");
 </script>
 
 <script defer src="../shared/service-menu.js"></script>
