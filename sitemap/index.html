@@ -176,11 +176,11 @@ body {
 .node.is-system .node__head { background: rgba(75,108,255,0.08); }
 .node.is-work .node__head { background: rgba(168,85,247,0.09); }
 
-.node__headtop { display: flex; align-items: flex-start; gap: 9px; }
+.node__headtop { display: flex; align-items: center; gap: 9px; min-height: 26px; }
 
 .node__num { flex-shrink: 0; width: 26px; height: 26px; display: grid; place-items: center; background: rgba(159, 186, 205, 0.12); border: 1px solid rgba(159, 186, 205, 0.24); border-radius: 7px; font-size: 12px; font-weight: 700; color: var(--brand-blue-light); font-variant-numeric: tabular-nums; }
 
-.node__name { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; white-space: normal; line-height: 1.3; }
+.node__name { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .node__sub { flex-shrink: 0; font-size: 12px; font-weight: 700; color: var(--brand-blue-light); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .node__sub-wrap { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
 .node__price { font-size: 11px; font-weight: 600; color: #c3cdff; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -363,7 +363,9 @@ const CONFIG = { rate: 30, commentsMin: 0.10, commentsMax: 0.15, mgmtMin: 0.10, 
 const PROJECT_META = { pages: 13, screens: 66 };
 
 const SITEMAP = [
-  { name: "Design Concept", work: true, tag: "Design", sections: [
+  { name: "Design Concept", work: true, tag: "Design",
+    caption: `<strong>Stage 1 — 100% prepaid.</strong> We lock the visual direction on real screens before designing every page. Premium, photography-forward, government-grade — not "startup / SaaS".`,
+    sections: [
       { name: "Concept direction 1", desc: "Hero + 1–2 more sections — the first design concept shown on real screens. Premium, photography-forward look (refs: Mace Group, Aramco Digital).", min: 15, max: 21 },
       { name: "Concept direction 2", desc: "Same screens (hero + 1–2 sections), a clearly different direction — so the choice between concepts is a real one.", min: 12, max: 14 },
       { name: "Concept direction 3", desc: "Same screens, third direction (SOW asks for 2–3 concepts — we present 3).", min: 12, max: 14 },
@@ -372,11 +374,15 @@ const SITEMAP = [
       { name: "Main animation teaser", desc: "A short preview of the homepage hero animation — how it will look and move (the full animation comes later).", min: 5, max: 7 },
     ],
   },
-  { name: "Wireframes", work: true, tag: "UX", sections: [
+  { name: "Wireframes", work: true, tag: "UX",
+    caption: `<strong>Approved before any visual design.</strong> The structure of every key template — desktop + mobile, EN + AR. Arabic is a mirrored pass over the approved English layouts (SOW Phase 1).`,
+    sections: [
       { name: "Key-page wireframes (EN + AR)", desc: "All key templates, desktop + mobile, both languages, structured around real content. Arabic is a mirrored pass over the approved English wireframes — not a redraw. Approved by Marketing before visual design starts (SOW Phase 1 deliverable).", min: 24, max: 32 },
     ],
   },
-  { name: "Homepage Hero Animation", work: true, tag: "Animation", sections: [
+  { name: "Hero Animation", work: true, tag: "Animation",
+    caption: `<strong>The signature homepage moment</strong> — "Building Saudi Arabia's Future" across sectors. Concept, motion design and a dev-ready spec. Full video render, if needed, is billed separately.`,
+    sections: [
       { name: "Idea & storyboard",           desc: "What the main homepage animation shows, frame by frame — 'Building Saudi Arabia's Future' across sectors.", min: 4, max: 6 },
       { name: "Hero animation design",       desc: "The animated key visual itself — the flagship project showcase.", min: 6, max: 9 },
       { name: "Animated number counters",    desc: "Key company numbers counting up on screen — design + spec for developers.", min: 2, max: 3 },
@@ -404,7 +410,9 @@ const SITEMAP = [
       { name: "Geographic footprint map", desc: "KSA + regional expansion map.", min: 3, max: 4 },
     ],
   },
-  { name: "Company Page (×5 template)", sections: [
+  { name: "Company Page ×5",
+    caption: `<strong>One strong template, adapted to all 5 companies</strong> — logos, hero, photography, copy and stats — so each works as a standalone landing for organic / paid entry, exactly as the brief's "self-contained company pages" require.`,
+    sections: [
       { name: "Company hero",        desc: "Standalone entry hero — built for organic / paid-media landing.", min: 4, max: 6 },
       { name: "Positioning / intro", desc: "What this entity does, decoupled from the group homepage.", min: 2, max: 3 },
       { name: "Services snapshot",   desc: "Key services preview → Services Overview.", min: 3, max: 4 },
@@ -436,7 +444,9 @@ const SITEMAP = [
       { name: "CTA",                       desc: "Call to action.", min: 1, max: 1.5 },
     ],
   },
-  { name: "Projects Portfolio", sections: [
+  { name: "Projects Portfolio",
+    caption: `<strong>The single most commercially important area</strong> (the brief's own words). A filterable case-study gallery — Division · Sector · Location · Type, all at once.`,
+    sections: [
       { name: "Portfolio hero",            desc: "Flagship 'our work across every sector' intro.", min: 3, max: 4 },
       { name: "Async filter (4 taxonomies)", desc: "Division · Sector · Location · Type — concurrent async filtering, URL-persisted, reset. The most commercially vital area.", min: 8, max: 12, sep: true },
       { name: "Project grid / cards",      desc: "Case cards with imagery + key metric — 15+ case studies at launch (~4 per division).", min: 4, max: 6 },
@@ -499,21 +509,29 @@ const SITEMAP = [
       { name: "Legal / Privacy / Cookie", desc: "Compliance pages template (GCC data-residency context).", min: 2, max: 3, tbc: true },
     ],
   },
-  { name: "Animation", work: true, tag: "Animation", sections: [
+  { name: "Animation", work: true, tag: "Animation",
+    caption: `<strong>Working code prototypes</strong> of the key animated blocks, handed to the dev team during design — so the built site moves exactly as designed, no surprises — plus the site-wide transitions and micro-animations.`,
+    sections: [
       { name: "Live coded prototypes",     desc: "Working code demos of the key animated blocks (hero, filter, counters), handed to the dev team during design — so the built site moves exactly as designed, no surprises.", min: 12, max: 16 },
       { name: "Page & scroll transitions", desc: "How sections appear and move as you scroll — site-wide.", min: 4, max: 7 },
       { name: "Micro-animations",          desc: "Hover states, buttons, form feedback, counters, small reveals.", min: 4, max: 7 },
     ],
   },
-  { name: "Bilingual (Arabic-first / RTL)", work: true, tag: "Localization", sections: [
+  { name: "Bilingual / RTL", work: true, tag: "Localization",
+    caption: `<strong>Arabic-first.</strong> Every template mirrored for RTL with Arabic typography and bidi handling, reviewed by a native speaker before sign-off. Flat 25% of the page-design volume.`,
+    sections: [
       { name: "Arabic-first RTL design pass", desc: "Mirrored RTL layouts, Arabic typography, bidi handling across all templates. Flat 25% of the page-design volume.", computed: true, basis: "pages", pctMin: 0.25, pctMax: 0.25 },
     ],
   },
-  { name: "Adaptive Design", work: true, tag: "Responsive", sections: [
+  { name: "Adaptive Design", work: true, tag: "Responsive",
+    caption: `<strong>Tablet &amp; mobile across all pages</strong> — mobile-first, as the brief requires. Flat 25% of the page-design volume.`,
+    sections: [
       { name: "Tablet & mobile (all pages)", desc: "Tablet + mobile layouts across all pages. Flat 25% of the page-design volume — concepts, wireframes and animation work are not in the calculation base.", computed: true, basis: "pages", pctMin: 0.25, pctMax: 0.25 },
     ],
   },
-  { name: "Implementation", excluded: true, sections: [
+  { name: "Implementation", excluded: true,
+    caption: `<strong>Part 2 — priced after the design is ready</strong>, where cost depends on the real page count, interactivity and animation. Recommended stack noted below; front-end build, CMS &amp; hosting can be delivered as a separately priced option.`,
+    sections: [
       { name: "Front-end (the visible site)", desc: "Recommended stack: Next.js (React) — every page is pre-built as a static file and served from a CDN, so it opens instantly. This is what makes the <3s load and Lighthouse 85+ targets achievable by design, not by luck. GSAP for the animations. We can deliver this part as a separately priced option.", min: 50, max: 80 },
       { name: "Back-end — CMS & integrations", desc: "Recommended: a headless CMS — Marketing edits content in a simple admin while the site itself stays static and fast. Covers role-based access, CRM lead routing, GA4 analytics and ERP-ready feeds.", min: 34, max: 60 },
       { name: "Hosting, security & VAPT", desc: "Stays with SRACO ITC per the SOW: GCC hosting (AWS Bahrain / Azure UAE North), CDN, SSL / WAF, OWASP, pre-launch VAPT.", min: 20, max: 40 },
