@@ -182,6 +182,9 @@ body {
 
 .node__name { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; white-space: normal; line-height: 1.3; }
 .node__sub { flex-shrink: 0; font-size: 12px; font-weight: 700; color: var(--brand-blue-light); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.node__sub-wrap { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.node__price { font-size: 11px; font-weight: 600; color: #c3cdff; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.node__price--excl { color: rgba(255,206,138,0.85); }
 
 /* badge row — sits UNDER the page name so long names aren't clipped */
 .node__badges { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -191,11 +194,18 @@ body {
 .node__badge--system  { color: #c3cdff; background: rgba(75,108,255,0.16); border: 1px solid rgba(75,108,255,0.4); }
 .node__badge--work    { color: #e0b3ff; background: rgba(168,85,247,0.16); border: 1px solid rgba(168,85,247,0.42); }
 .node__badge--p2      { color: #c3cdff; background: rgba(75,108,255,0.16); border: 1px solid rgba(75,108,255,0.4); }
+.node__badge--tag     { color: var(--brand-blue-light); background: rgba(159,186,205,0.12); border: 1px solid rgba(159,186,205,0.28); }
 .node__badge--excl    { color: #ffce8a; background: rgba(255,173,51,0.12); border: 1px solid rgba(255,173,51,0.38); }
 .node.is-excluded { opacity: 0.72; border-style: dashed; border-color: rgba(255,173,51,0.35); }
 .node__sub--excl { color: rgba(255,206,138,0.9) !important; }
 
 .node__sections { display: flex; flex-direction: column; gap: 8px; padding: 12px; }
+
+/* caption — "what exactly we deliver" above the tiles inside a node (optional) */
+.node__caption { padding: 10px 12px; font-size: 11px; line-height: 1.45; color: rgba(255,255,255,0.58); border-bottom: 1px dashed rgba(255,255,255,0.12); }
+.node__caption strong { color: rgba(255,255,255,0.82); font-weight: 600; }
+.node.is-work .node__caption { color: rgba(224,179,255,0.92); background: rgba(168,85,247,0.05); border-bottom-color: rgba(168,85,247,0.18); }
+.node.is-work .node__caption strong { color: #e9ccff; }
 
 /* ─── Section tile ───────────────────────────────────────────── */
 
@@ -222,6 +232,9 @@ body {
 .breakdown__table th, .breakdown__table td { text-align: right; padding: 12px 16px; font-size: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
 .breakdown__table th:first-child, .breakdown__table td:first-child { text-align: left; color: rgba(255,255,255,0.7); }
 .breakdown__table thead th { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.4); }
+.breakdown__table tr.row-sub td { font-weight: 600; border-top: 1px solid rgba(255, 255, 255, 0.14); }
+.breakdown__table tr.row-sub td:first-child { color: rgba(255,255,255,0.85); }
+.breakdown__table tr.row-sub td:not(:first-child) { font-size: 20px; font-weight: 700; }
 .breakdown__table tr.is-total td { font-weight: 700; font-size: 16px; border-bottom: none; border-top: 2px solid rgba(255, 255, 255, 0.16); padding-top: 16px; }
 .breakdown__table tr.is-total td:not(:first-child) { color: #c3cdff; font-size: 28px; white-space: nowrap; }
 .breakdown__table tr.is-total .mm { font-size: 11px; font-weight: 500; color: #c3cdff; opacity: 0.7; margin-right: 8px; vertical-align: baseline; }
@@ -345,6 +358,9 @@ body {
    Hours are in HOURS (min/max). Rate lives only in CONFIG.rate (not shown to client).
    ─────────────────────────────────────────────────────────────── */
 const CONFIG = { rate: 30, commentsMin: 0.10, commentsMax: 0.15, mgmtMin: 0.10, mgmtMax: 0.10, hoursPerDay: 6 };
+
+/* Client-facing rollup figures — pages & sections the client sees (NOT internal work blocks/tiles). Tune to the brief. */
+const PROJECT_META = { pages: 13, screens: 66 };
 
 const SITEMAP = [
   { name: "Design Concept", work: true, tag: "Design", sections: [
@@ -509,9 +525,11 @@ const SITEMAP = [
 /* ─── Helpers ────────────────────────────────────────────────── */
 const fmtH = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
 const fmtUSD = (n) => "$" + Math.round(n).toLocaleString("en-US");
+const fmtUSDRange = (a, b) => "$" + Math.round(a).toLocaleString("en-US") + "–" + Math.round(b).toLocaleString("en-US");
 const sumSecs = (secs) => secs.reduce((a, s) => [a[0] + s.min, a[1] + s.max], [0, 0]);
 
 let grandMin = 0, grandMax = 0, sectionCount = 0, pageCount = 0;
+const blocks = [];   // per-column rows for the breakdown table
 
 function badges(s) {
   let h = "";
@@ -534,16 +552,18 @@ function tilesHTML(sections) {
 
 const KIND_LABEL = { subpage: "Subpage", popup: "Popup", system: "System", work: "Scope" };
 
-function nodeHTML({ num, kind, tag, name, sections, cls, p2, excluded }) {
+function nodeHTML({ num, kind, tag, name, sections, cls, p2, excluded, caption }) {
   const [mn, mx] = sumSecs(sections);
-  if (!excluded) { grandMin += mn; grandMax += mx; sectionCount += sections.length; }
+  if (!excluded) { grandMin += mn; grandMax += mx; sectionCount += sections.length; blocks.push({ name, mn, mx }); }
   const bd = [];
-  if (kind) bd.push(`<span class="node__badge node__badge--${kind}">${tag || KIND_LABEL[kind] || kind}</span>`);
+  // tag badge on EVERY column (plain pages → --tag class; kinds carry their own label)
+  if (kind || tag) bd.push(`<span class="node__badge node__badge--${kind || "tag"}">${tag || KIND_LABEL[kind] || kind}</span>`);
   if (p2)   bd.push(`<span class="node__badge node__badge--p2">Phase 2</span>`);
   if (excluded) bd.push(`<span class="node__badge node__badge--excl">Out of design scope</span>`);
+  // price under hours on every billable column; excluded shows hours only (no price)
   const sub = excluded
-    ? `<span class="node__sub node__sub--excl">${fmtH(mn)}–${fmtH(mx)}h · excl.</span>`
-    : `<span class="node__sub">${fmtH(mn)}–${fmtH(mx)}h</span>`;
+    ? `<span class="node__sub-wrap"><span class="node__sub node__sub--excl">${fmtH(mn)}–${fmtH(mx)}h · excl.</span></span>`
+    : `<span class="node__sub-wrap"><span class="node__sub">${fmtH(mn)}–${fmtH(mx)}h</span><span class="node__price">${fmtUSDRange(mn * CONFIG.rate, mx * CONFIG.rate)}</span></span>`;
   return `
     <div class="node ${cls || ""}${excluded ? " is-excluded" : ""}">
       <div class="node__head">
@@ -554,6 +574,7 @@ function nodeHTML({ num, kind, tag, name, sections, cls, p2, excluded }) {
         </div>
         ${bd.length ? `<div class="node__badges">${bd.join("")}</div>` : ""}
       </div>
+      ${caption ? `<div class="node__caption">${caption}</div>` : ""}
       <div class="node__sections">${tilesHTML(sections)}</div>
     </div>`;
 }
@@ -591,12 +612,12 @@ SITEMAP.forEach((page) => {
   pageCount += 1;
   let nodeArgs;
   if (page.work) {
-    nodeArgs = { kind: "work", tag: page.tag, name: page.name, sections: page.sections, cls: "is-work", p2: page.p2 };
+    nodeArgs = { kind: "work", tag: page.tag, name: page.name, sections: page.sections, cls: "is-work", p2: page.p2, excluded: page.excluded, caption: page.caption };
   } else if (page.system) {
-    nodeArgs = { kind: "system", name: page.name, sections: page.sections, cls: "is-system", p2: page.p2 };
+    nodeArgs = { kind: "system", name: page.name, sections: page.sections, cls: "is-system", p2: page.p2, caption: page.caption };
   } else {
     pageIndex += 1;
-    nodeArgs = { num: String(pageIndex).padStart(2, "0"), name: page.name, sections: page.sections, p2: page.p2, excluded: page.excluded };
+    nodeArgs = { num: String(pageIndex).padStart(2, "0"), name: page.name, tag: page.tag || "Page", sections: page.sections, p2: page.p2, excluded: page.excluded, caption: page.caption };
   }
 
   let col = `<div class="column">`;
@@ -604,7 +625,7 @@ SITEMAP.forEach((page) => {
   (page.children || []).forEach((child) => {
     pageCount += 1;
     col += `<div class="connector${child.kind === "popup" ? " connector--popup" : ""}"></div>`;
-    col += nodeHTML({ kind: child.kind, name: child.name, sections: child.sections, cls: "is-child", p2: child.p2 });
+    col += nodeHTML({ kind: child.kind, name: child.name, sections: child.sections, cls: "is-child", p2: child.p2, caption: child.caption });
   });
   col += `</div>`;
   board.insertAdjacentHTML("beforeend", col);
@@ -642,14 +663,18 @@ const daysMin = Math.ceil(grandMin / CONFIG.hoursPerDay);
 const daysMax = Math.ceil(grandMax / CONFIG.hoursPerDay);
 
 document.getElementById("rollup").innerHTML = `
-  <div class="stat"><div class="stat__label">Pages / nodes</div><div class="stat__value">${pageCount}</div></div>
-  <div class="stat"><div class="stat__label">Sections</div><div class="stat__value">${sectionCount}</div></div>
+  <div class="stat"><div class="stat__label">Pages</div><div class="stat__value">${PROJECT_META.pages}</div></div>
+  <div class="stat"><div class="stat__label">Sections</div><div class="stat__value">${PROJECT_META.screens}</div></div>
   <div class="stat"><div class="stat__label">Hours</div><div class="stat__value">${fmtH(grandMin)}–${fmtH(grandMax)}</div></div>
-  <div class="stat"><div class="stat__label">Working days</div><div class="stat__value">${daysMin}–${daysMax}</div></div>`;
+  <div class="stat"><div class="stat__label">Working days</div><div class="stat__value">${daysMin}–${daysMax}</div></div>
+  <div class="stat stat--accent"><div class="stat__label">Total</div><div class="stat__value">${fmtUSD(totMin)}–<small>${fmtUSD(totMax)}</small></div></div>`;
 
 const pctLabel = (a, b) => (a === b ? `${a * 100}%` : `${a * 100}–${b * 100}%`);
+const blockRows = blocks.map((b) => `
+  <tr><td>${b.name} (${fmtH(b.mn)}–${fmtH(b.mx)} hrs)</td><td>${fmtUSD(b.mn * CONFIG.rate)}</td><td>${fmtUSD(b.mx * CONFIG.rate)}</td></tr>`).join("");
 document.getElementById("breakdownBody").innerHTML = `
-  <tr><td>Subtotal (${fmtH(grandMin)}–${fmtH(grandMax)} hrs)</td><td>${fmtUSD(subMin)}</td><td>${fmtUSD(subMax)}</td></tr>
+  ${blockRows}
+  <tr class="row-sub"><td>Subtotal (${fmtH(grandMin)}–${fmtH(grandMax)} hrs × $${CONFIG.rate}/h)</td><td>${fmtUSD(subMin)}</td><td>${fmtUSD(subMax)}</td></tr>
   <tr><td>Comments & unplanned work (${pctLabel(CONFIG.commentsMin, CONFIG.commentsMax)})</td><td>${fmtUSD(commMin)}</td><td>${fmtUSD(commMax)}</td></tr>
   <tr><td>Management & communication (${pctLabel(CONFIG.mgmtMin, CONFIG.mgmtMax)})</td><td>${fmtUSD(mgmtMin)}</td><td>${fmtUSD(mgmtMax)}</td></tr>
   <tr class="is-total"><td>Total estimate</td><td><small class="mm">min</small> ${fmtUSD(totMin)}</td><td><small class="mm">max</small> ${fmtUSD(totMax)}</td></tr>`;
