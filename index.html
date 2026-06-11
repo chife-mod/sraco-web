@@ -290,8 +290,8 @@ body {
       <span class="tile-card__cta">Open brief</span>
     </a>
 
-    <!-- Tile 2 — SOW document (PDF) -->
-    <a class="tile-card" href="materials/SRACO-Website-project-SOW.pdf" target="_blank" rel="noopener" data-external>
+    <!-- Tile 2 — SOW document (PDF + HTML) -->
+    <div class="tile-card" style="cursor:default;">
       <span class="tile-card__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M14 3v4a1 1 0 0 0 1 1h4M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8M14 3l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -302,10 +302,23 @@ body {
       <h2 class="tile-card__title">SOW Document</h2>
       <p class="tile-card__desc">
         Marketing Brief &amp; Requirements for IT (v2.0) — divisions, deliverables and ownership, design
-        references, integrations and timeline. Opens the PDF.
+        references, integrations and timeline.
       </p>
-      <span class="tile-card__cta">Open SOW</span>
-    </a>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:auto;">
+        <a href="materials/SRACO-Website-project-SOW.pdf" target="_blank" rel="noopener"
+           style="font-size:13px; font-weight:500; color:var(--white); text-decoration:none; border:1px solid rgba(255,255,255,0.18); border-radius:8px; padding:7px 14px; background:rgba(255,255,255,0.05); transition:background 200ms ease, border-color 200ms ease;"
+           onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.32)'"
+           onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.18)'">
+          PDF version ↗
+        </a>
+        <a href="sow-html/"
+           style="font-size:13px; font-weight:500; color:var(--white); text-decoration:none; border:1px solid rgba(159,186,205,0.35); border-radius:8px; padding:7px 14px; background:rgba(159,186,205,0.08); transition:background 200ms ease, border-color 200ms ease;"
+           onmouseover="this.style.background='rgba(159,186,205,0.18)';this.style.borderColor='rgba(159,186,205,0.6)'"
+           onmouseout="this.style.background='rgba(159,186,205,0.08)';this.style.borderColor='rgba(159,186,205,0.35)'">
+          HTML version →
+        </a>
+      </div>
+    </div>
 
     <!-- Tile 3 — Sitemap & Estimate (combined) -->
     <a class="tile-card" href="sitemap/">
@@ -355,6 +368,33 @@ body {
     </div>
   </div>
 
+  <!-- ── SEO & AI-ready structure — findability baked into the design ── -->
+  <div class="section-block">
+    <h2 class="section-title">SEO — built into the design, AI-ready</h2>
+    <div class="approach">
+      <div class="approach-card">
+        <span class="approach-card__n">1</span>
+        <div class="approach-card__t">Structure search understands</div>
+        <div class="approach-card__d">Clear heading hierarchy and modular page structure are designed in from the first wireframe — search engines (and people) instantly understand what every page is about.</div>
+      </div>
+      <div class="approach-card">
+        <span class="approach-card__n">2</span>
+        <div class="approach-card__t">Ready for AI search</div>
+        <div class="approach-card__d">A growing share of clients now find vendors through AI assistants (ChatGPT, Perplexity, Google AI Overviews). We design page structure so AI systems can quote it: facts with numbers, clean sections, FAQ patterns where they matter.</div>
+      </div>
+      <div class="approach-card">
+        <span class="approach-card__n">3</span>
+        <div class="approach-card__t">Schema-ready components</div>
+        <div class="approach-card__d">Cards, case studies and contact blocks are designed so structured data (Schema.org) maps onto them one-to-one — the dev team gets a spec, not a puzzle.</div>
+      </div>
+      <div class="approach-card">
+        <span class="approach-card__n">4</span>
+        <div class="approach-card__t">Facts over adjectives</div>
+        <div class="approach-card__d">The evidence-first content patterns the SOW asks for are exactly what search and AI systems rank and cite — one discipline, two wins.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Stages — mirrored from Sitemap & Estimate ── -->
   <div class="section-block">
     <h2 class="section-title">Stages</h2>
@@ -362,12 +402,12 @@ body {
       <div class="stage-card">
         <span class="stage-card__n">Stage 1 <span class="stage-card__pay">100% prepaid</span></span>
         <div class="stage-card__t">Concept</div>
-        <div class="stage-card__d">Visual direction + teaser of the key visual / motion. Paid 100% upfront before start.</div>
+        <div class="stage-card__d">Three design concepts (hero + 1–2 sections each) + a teaser of the main animation. Paid 100% upfront before start.</div>
       </div>
       <div class="stage-card">
         <span class="stage-card__n">Stage 2 <span class="stage-card__pay">prepay → deliver</span></span>
         <div class="stage-card__t">Design — Part 1</div>
-        <div class="stage-card__d">Homepage, signature hero motion and the first batch of layouts (desktop → mobile). Prepay, then deliver.</div>
+        <div class="stage-card__d">Homepage, the hero animation and the first batch of layouts (desktop → mobile). Prepay, then deliver.</div>
       </div>
       <div class="stage-card">
         <span class="stage-card__n">Stage 3 <span class="stage-card__pay">prepay → deliver</span></span>

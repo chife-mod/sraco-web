@@ -176,11 +176,11 @@ body {
 .node.is-system .node__head { background: rgba(75,108,255,0.08); }
 .node.is-work .node__head { background: rgba(168,85,247,0.09); }
 
-.node__headtop { display: flex; align-items: center; gap: 9px; }
+.node__headtop { display: flex; align-items: flex-start; gap: 9px; }
 
 .node__num { flex-shrink: 0; width: 26px; height: 26px; display: grid; place-items: center; background: rgba(159, 186, 205, 0.12); border: 1px solid rgba(159, 186, 205, 0.24); border-radius: 7px; font-size: 12px; font-weight: 700; color: var(--brand-blue-light); font-variant-numeric: tabular-nums; }
 
-.node__name { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.node__name { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em; white-space: normal; line-height: 1.3; }
 .node__sub { flex-shrink: 0; font-size: 12px; font-weight: 700; color: var(--brand-blue-light); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 /* badge row — sits UNDER the page name so long names aren't clipped */
@@ -201,8 +201,8 @@ body {
 
 .tile { padding: 11px 12px; background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 9px; transition: border-color 180ms ease, background 180ms ease; }
 .tile:hover { border-color: rgba(159,186,205,0.3); background: rgba(255,255,255,0.06); }
-.tile__row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.tile__name { font-size: 13.5px; font-weight: 600; letter-spacing: -0.005em; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile__row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.tile__name { font-size: 13.5px; font-weight: 600; letter-spacing: -0.005em; min-width: 0; white-space: normal; line-height: 1.35; }
 .tile__hours { flex-shrink: 0; display: inline-flex; align-items: baseline; gap: 3px; padding: 3px 8px; background: rgba(159, 186, 205, 0.12); border: 1px solid rgba(159, 186, 205, 0.22); border-radius: 999px; font-size: 11.5px; font-weight: 700; color: var(--brand-blue-light); font-variant-numeric: tabular-nums; }
 .tile__hours small { font-size: 9px; font-weight: 500; opacity: 0.7; }
 .tile__desc { font-size: 11.5px; line-height: 1.4; color: rgba(255, 255, 255, 0.48); margin-top: 6px; }
@@ -225,6 +225,9 @@ body {
 .breakdown__table tr.is-total td { font-weight: 700; font-size: 16px; border-bottom: none; border-top: 2px solid rgba(255, 255, 255, 0.16); padding-top: 16px; }
 .breakdown__table tr.is-total td:not(:first-child) { color: #c3cdff; font-size: 28px; white-space: nowrap; }
 .breakdown__table tr.is-total .mm { font-size: 11px; font-weight: 500; color: #c3cdff; opacity: 0.7; margin-right: 8px; vertical-align: baseline; }
+.breakdown__notes { margin-top: 18px; }
+.breakdown__notes p { font-size: 12.5px; line-height: 1.55; color: rgba(255,255,255,0.45); margin: 0 0 8px; }
+.breakdown__notes strong { color: rgba(255,255,255,0.65); font-weight: 600; }
 .breakdown__note { margin-top: 16px; font-size: 12px; color: rgba(255, 255, 255, 0.4); line-height: 1.5; }
 .footer-pad { height: 120px; }
 </style>
@@ -285,6 +288,10 @@ body {
     <thead><tr><th>Line</th><th>Min</th><th>Max</th></tr></thead>
     <tbody id="breakdownBody"></tbody>
   </table>
+  <div class="breakdown__notes">
+    <p><strong>Comments &amp; unplanned work</strong> — design iterations after each delivery. <strong>Two revision rounds per stage are included</strong>; further rounds are billed hourly at the same rate.</p>
+    <p><strong>Management &amp; communication</strong> — project management, calls, and coordination with SRACO's marketing, content owners and ITC.</p>
+  </div>
 </div>
 
 <!-- Stages -->
@@ -294,12 +301,12 @@ body {
     <div class="stage-card">
       <span class="stage-card__n">Stage 1 <span class="stage-card__pay">100% prepaid</span></span>
       <div class="stage-card__t">Concept</div>
-      <div class="stage-card__d">Visual direction + teaser of the key visual / motion. Paid 100% upfront before start.</div>
+      <div class="stage-card__d">Three design concepts (hero + 1–2 sections each) + a teaser of the main animation. Paid 100% upfront before start.</div>
     </div>
     <div class="stage-card">
       <span class="stage-card__n">Stage 2 <span class="stage-card__pay">prepay → deliver</span></span>
       <div class="stage-card__t">Design — Part 1</div>
-      <div class="stage-card__d">Homepage, signature hero motion and the first batch of layouts (desktop → mobile). Prepay, then deliver.</div>
+      <div class="stage-card__d">Homepage, the hero animation and the first batch of layouts (desktop → mobile). Prepay, then deliver.</div>
     </div>
     <div class="stage-card">
       <span class="stage-card__n">Stage 3 <span class="stage-card__pay">prepay → deliver</span></span>
@@ -337,25 +344,27 @@ body {
    Flags: tbc = needs clarification · p2 = phase 2 · sep = separate work block.
    Hours are in HOURS (min/max). Rate lives only in CONFIG.rate (not shown to client).
    ─────────────────────────────────────────────────────────────── */
-const CONFIG = { rate: 30, commentsMin: 0.15, commentsMax: 0.20, mgmtMin: 0.10, mgmtMax: 0.10, hoursPerDay: 6 };
+const CONFIG = { rate: 30, commentsMin: 0.10, commentsMax: 0.15, mgmtMin: 0.10, mgmtMax: 0.10, hoursPerDay: 6 };
 
 const SITEMAP = [
-  { name: "Concept", work: true, tag: "Design", sections: [
-      { name: "Visual direction",   desc: "Look & feel, enterprise typography, colour system, layout language — premium, government-grade, photography-forward (refs: Mace Group, Aramco Digital).", min: 12, max: 16 },
-      { name: "Concept directions (2–3 total)", desc: "1–2 additional visual directions on top of the baseline — SOW requires 2–3 concepts presented for Marketing approval.", min: 8, max: 14 },
-      { name: "Design system", desc: "Typography, colours, components, grid — packaged for IT implementation review (SOW Phase 2 deliverable).", min: 8, max: 12 },
-      { name: "Signature visual & motion teaser", desc: "Direction teaser for the flagship hero + key motion (not the full animation).", min: 5, max: 7 },
+  { name: "Design Concept", work: true, tag: "Design", sections: [
+      { name: "Concept direction 1", desc: "Hero + 1–2 more sections — the first design concept shown on real screens. Premium, photography-forward look (refs: Mace Group, Aramco Digital).", min: 15, max: 21 },
+      { name: "Concept direction 2", desc: "Same screens (hero + 1–2 sections), a clearly different direction — so the choice between concepts is a real one.", min: 12, max: 14 },
+      { name: "Concept direction 3", desc: "Same screens, third direction (SOW asks for 2–3 concepts — we present 3).", min: 12, max: 14 },
+      { name: "Design system", desc: "Typography, colours, components, grid, spacing — one source of truth for every page, packaged for the dev team.", min: 10, max: 16 },
+      { name: "Photography art direction", desc: "The design stands on real project photography, not stock. We define the photographic style and review / select the client's imagery for every key page; a shot-list brief if new photography is needed.", min: 6, max: 10 },
+      { name: "Main animation teaser", desc: "A short preview of the homepage hero animation — how it will look and move (the full animation comes later).", min: 5, max: 7 },
     ],
   },
   { name: "Wireframes", work: true, tag: "UX", sections: [
-      { name: "Key-page wireframes (EN + AR)", desc: "All key templates, desktop + mobile, both languages — approved by Marketing before visual design starts (SOW Phase 1 deliverable).", min: 14, max: 20 },
+      { name: "Key-page wireframes (EN + AR)", desc: "All key templates, desktop + mobile, both languages, structured around real content. Arabic is a mirrored pass over the approved English wireframes — not a redraw. Approved by Marketing before visual design starts (SOW Phase 1 deliverable).", min: 24, max: 32 },
     ],
   },
-  { name: "Signature Hero & Motion", work: true, tag: "Animation", sections: [
-      { name: "Hero concept & storyboard", desc: "'Building Saudi Arabia's Future' — key visual narrative across sectors.", min: 4, max: 6 },
-      { name: "Flagship hero motion",       desc: "Animated key-visual / flagship project showcase treatment.", min: 6, max: 9 },
-      { name: "Animated metric counters",   desc: "Corporate stat counters — motion design + spec.", min: 2, max: 3 },
-      { name: "Featured-projects motion",   desc: "Carousel + reveal choreography for featured work.", min: 4, max: 6 },
+  { name: "Homepage Hero Animation", work: true, tag: "Animation", sections: [
+      { name: "Idea & storyboard",           desc: "What the main homepage animation shows, frame by frame — 'Building Saudi Arabia's Future' across sectors.", min: 4, max: 6 },
+      { name: "Hero animation design",       desc: "The animated key visual itself — the flagship project showcase.", min: 6, max: 9 },
+      { name: "Animated number counters",    desc: "Key company numbers counting up on screen — design + spec for developers.", min: 2, max: 3 },
+      { name: "Featured projects animation", desc: "How the projects carousel moves and reveals.", min: 4, max: 6 },
     ],
   },
   { name: "Homepage", sections: [
@@ -386,7 +395,7 @@ const SITEMAP = [
       { name: "Featured projects",   desc: "Entity projects preview → Projects.", min: 2, max: 3 },
       { name: "Stats / credibility", desc: "Entity performance metrics.", min: 2, max: 3 },
       { name: "Division-routed CTA", desc: "Lead routed to this division's commercial team.", min: 2, max: 3 },
-      { name: "Per-entity adaptation (×5)", desc: "Tailoring the template to 5 standalone companies — hero, imagery, copy blocks.", min: 6, max: 10, tbc: true },
+      { name: "Per-company content adaptation (×5)", desc: "Adapting the template to each of the 5 companies: collecting and placing their logos, hero section, photography and portfolio content, copy blocks and stats, subpage pass + QA — 5–6 h per company.", min: 25, max: 30, tbc: true },
     ],
     children: [
       { name: "Services Overview", kind: "subpage", sections: [
@@ -395,7 +404,7 @@ const SITEMAP = [
           { name: "CTA",                   desc: "Enquiry call to action.", min: 1, max: 1.5 },
       ]},
       { name: "Projects", kind: "subpage", sections: [
-          { name: "Entity projects grid",  desc: "Projects scoped to this company.", min: 3, max: 4 },
+          { name: "Entity projects grid",  desc: "Projects scoped to this company — each opens the shared Case Study template from Projects Portfolio (one template, counted once).", min: 3, max: 4 },
           { name: "Project card",          desc: "Case card with key metric.", min: 1.5, max: 2 },
       ]},
       { name: "Contacts", kind: "subpage", sections: [
@@ -474,13 +483,10 @@ const SITEMAP = [
       { name: "Legal / Privacy / Cookie", desc: "Compliance pages template (GCC data-residency context).", min: 2, max: 3, tbc: true },
     ],
   },
-  { name: "Interactivity & Micro-animations", work: true, tag: "Animation", sections: [
-      { name: "Transitions & parallax", desc: "Section transitions, scroll depth (site-wide).", min: 4, max: 7 },
-      { name: "Micro-interactions",     desc: "Hover, buttons, form feedback, counter easing, reveals.", min: 4, max: 7 },
-    ],
-  },
-  { name: "Motion Prototypes", work: true, tag: "Animation", sections: [
-      { name: "Live coded prototypes", desc: "Animated code demos of key blocks (hero, filter, counters) handed to the dev team during design, so the build matches intent — no surprises.", min: 6, max: 10 },
+  { name: "Animation", work: true, tag: "Animation", sections: [
+      { name: "Live coded prototypes",     desc: "Working code demos of the key animated blocks (hero, filter, counters), handed to the dev team during design — so the built site moves exactly as designed, no surprises.", min: 12, max: 16 },
+      { name: "Page & scroll transitions", desc: "How sections appear and move as you scroll — site-wide.", min: 4, max: 7 },
+      { name: "Micro-animations",          desc: "Hover states, buttons, form feedback, counters, small reveals.", min: 4, max: 7 },
     ],
   },
   { name: "Bilingual (Arabic-first / RTL)", work: true, tag: "Localization", sections: [
@@ -488,13 +494,13 @@ const SITEMAP = [
     ],
   },
   { name: "Adaptive Design", work: true, tag: "Responsive", sections: [
-      { name: "Tablet & mobile (all pages)", desc: "Tablet + mobile layouts across all pages. Auto-calculated 20–30% of the base scope.", computed: true, pctMin: 0.20, pctMax: 0.30 },
+      { name: "Tablet & mobile (all pages)", desc: "Tablet + mobile layouts across all pages. Auto-calculated 30–40% of the base scope.", computed: true, pctMin: 0.30, pctMax: 0.40 },
     ],
   },
-  { name: "Build, CMS & Integrations", excluded: true, sections: [
-      { name: "Front-end build & CMS",   desc: "Headless / CMS theming, role-based governance matrix, clean editor UX. Built with SRACO ITC.", min: 60, max: 100 },
-      { name: "ERP / CRM / analytics",   desc: "CRM lead routing, future ERP feeds (News & Careers), GA4 / GTM / Maps API.", min: 24, max: 40 },
-      { name: "Hosting, CDN, security & VAPT", desc: "GCC hosting (AWS Bahrain / Azure UAE), CDN, SSL / WAF, OWASP, pre-launch VAPT.", min: 20, max: 40 },
+  { name: "Implementation", excluded: true, sections: [
+      { name: "Front-end (the visible site)", desc: "Recommended stack: Next.js (React) — every page is pre-built as a static file and served from a CDN, so it opens instantly. This is what makes the <3s load and Lighthouse 85+ targets achievable by design, not by luck. GSAP for the animations. We can deliver this part as a separately priced option.", min: 50, max: 80 },
+      { name: "Back-end — CMS & integrations", desc: "Recommended: a headless CMS — Marketing edits content in a simple admin while the site itself stays static and fast. Covers role-based access, CRM lead routing, GA4 analytics and ERP-ready feeds.", min: 34, max: 60 },
+      { name: "Hosting, security & VAPT", desc: "Stays with SRACO ITC per the SOW: GCC hosting (AWS Bahrain / Azure UAE North), CDN, SSL / WAF, OWASP, pre-launch VAPT.", min: 20, max: 40 },
     ],
   },
 ];

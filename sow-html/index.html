@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>SRACO Group — SOW v2.0 · Statement of Work</title>
+
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="../shared/components.css">
+
+<style>
+/* ── Reset & base ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.6;
+  color: var(--color-ink);
+  background: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Design-system color aliases (SOW document palette) ──────── */
+:root {
+  --sow-blue:      #116490;
+  --sow-blue-dark: #0d4f72;
+  --sow-blue-pale: #e8f2f7;
+  --sow-blue-mid:  #9FBACD;
+  --sow-gold:      #b08d3e;
+  --sow-ink:       #1e2a35;
+  --sow-muted:     #5c6b78;
+  --sow-border:    #d8e5ed;
+}
+
+/* ── Topbar ──────────────────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid var(--sow-border);
+  padding: 11px 24px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.topbar__brand {
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--sow-blue);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.topbar__brand span { color: var(--sow-ink); font-weight: 600; }
+
+.topbar__back {
+  font-size: 13px;
+  color: var(--sow-muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  transition: color 160ms ease;
+}
+.topbar__back:hover { color: var(--sow-blue); }
+.topbar__back::before { content: "←"; }
+
+.topbar__sep {
+  width: 1px;
+  height: 16px;
+  background: var(--sow-border);
+  flex-shrink: 0;
+}
+
+.topbar__spacer { flex: 1; min-width: 0; }
+
+.topbar__pdf {
+  font-size: 13px;
+  color: var(--sow-blue);
+  text-decoration: none;
+  border: 1px solid var(--sow-border);
+  border-radius: var(--radius-pill);
+  padding: 5px 13px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 160ms ease;
+}
+.topbar__pdf:hover { background: var(--sow-blue-pale); }
+
+/* ── Language switcher ───────────────────────────────────────── */
+.lang-toggle {
+  display: flex;
+  border: 1px solid var(--sow-border);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.lang-toggle__btn {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sow-muted);
+  background: #fff;
+  border: none;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+.lang-toggle__btn + .lang-toggle__btn {
+  border-left: 1px solid var(--sow-border);
+}
+.lang-toggle__btn:hover { color: var(--sow-blue); }
+.lang-toggle__btn.is-active {
+  background: var(--sow-blue);
+  color: #fff;
+}
+
+/* ── Page shell ──────────────────────────────────────────────── */
+.page-wrap {
+  max-width: 800px;
+  margin: 36px auto 100px;
+  padding: 0 24px;
+}
+
+@media (max-width: 600px) {
+  .page-wrap { margin-top: 20px; padding: 0 16px; }
+}
+
+/* ── Document card (paper) ───────────────────────────────────── */
+.doc-card {
+  background: #fff;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 2px 24px rgba(17, 100, 144, 0.08), 0 1px 4px rgba(17, 100, 144, 0.04);
+  padding: 56px 60px 64px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 680px) {
+  .doc-card { padding: 28px 22px 36px; }
+}
+
+/* ── Runhead ─────────────────────────────────────────────────── */
+.runhead {
+  display: flex;
+  gap: var(--space-3);
+  align-items: baseline;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sow-muted);
+  border-bottom: 2px solid var(--sow-blue-dark);
+  padding-bottom: var(--space-3);
+  margin-bottom: 40px;
+}
+.runhead strong { color: var(--sow-blue); letter-spacing: 0.1em; }
+
+/* ── Section divider ─────────────────────────────────────────── */
+.sow-section {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--sow-border);
+}
+.sow-section:last-child { border-bottom: none; }
+
+/* ── Title page block ────────────────────────────────────────── */
+.title-block {
+  text-align: center;
+  padding: 10px 0 6px;
+}
+.title-block__h1 {
+  margin: 0;
+  font-size: clamp(36px, 6vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--sow-blue-dark);
+  line-height: 1.1;
+}
+.title-block__sub {
+  font-size: 22px;
+  color: var(--sow-blue);
+  margin: 10px 0 0;
+  font-weight: 500;
+}
+.title-block__goldrule {
+  width: 100%;
+  height: 2px;
+  background: var(--sow-gold);
+  margin: 24px 0;
+  opacity: 0.8;
+  border: none;
+}
+.title-block__doctype {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--sow-ink);
+  margin: 4px 0 22px;
+}
+
+/* ── Section headings ────────────────────────────────────────── */
+h2.sec-h {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--sow-blue-dark);
+  border-bottom: 2px solid var(--sow-blue-dark);
+  padding-bottom: 8px;
+  margin: 0 0 16px;
+  line-height: 1.2;
+}
+
+h3.sub-h {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--sow-blue);
+  margin: 24px 0 8px;
+}
+
+/* ── Body copy ───────────────────────────────────────────────── */
+.sow-section p {
+  margin: 10px 0;
+  font-size: 15.5px;
+  color: var(--sow-ink);
+  line-height: 1.65;
+  max-width: 68ch;
+}
+
+.sow-section ul {
+  margin: 8px 0 16px;
+  padding-left: 22px;
+}
+.sow-section ul li {
+  margin: 6px 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--sow-ink);
+}
+
+/* ── Quote / callout ─────────────────────────────────────────── */
+.sow-quote {
+  border-left: 4px solid var(--sow-gold);
+  padding: 6px 18px;
+  margin: 18px 0;
+  color: var(--sow-blue);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.sow-banner {
+  background: var(--sow-blue-pale);
+  border-left: 6px solid var(--sow-blue-dark);
+  border-right: 6px solid var(--sow-blue-dark);
+  text-align: center;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--sow-blue-dark);
+  padding: 12px 20px;
+  margin: 18px 0;
+  font-size: 17px;
+  border-radius: var(--radius-sm);
+}
+
+.sow-mark {
+  background: #fff35e;
+  padding: 0 2px;
+  font-style: italic;
+  border-radius: 2px;
+}
+
+/* ── Tables ──────────────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  margin: 14px 0 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--sow-border);
+}
+
+.sow-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.sow-table th {
+  background: var(--sow-blue-dark);
+  color: #fff;
+  text-align: left;
+  padding: 9px 14px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.sow-table td {
+  border-top: 1px solid var(--sow-border);
+  padding: 9px 14px;
+  vertical-align: top;
+  line-height: 1.5;
+}
+.sow-table tbody tr:nth-child(even) td { background: #f4f8fb; }
+.sow-table td.lbl {
+  background: var(--sow-blue-pale);
+  font-weight: 700;
+  color: var(--sow-ink);
+  width: 34%;
+}
+
+/* ── Document footer ─────────────────────────────────────────── */
+.doc-footer {
+  margin-top: 36px;
+  padding-top: 20px;
+  border-top: 2px solid var(--sow-gold);
+  text-align: center;
+}
+.doc-footer strong { color: var(--sow-blue-dark); }
+.doc-footer .fine {
+  font-size: 12px;
+  color: var(--sow-muted);
+  margin-top: 6px;
+}
+
+/* ── Page footer ─────────────────────────────────────────────── */
+.page-footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--sow-muted);
+  margin-top: 40px;
+  padding-bottom: 40px;
+}
+.page-footer a {
+  color: var(--sow-blue);
+  text-decoration: none;
+}
+.page-footer a:hover { text-decoration: underline; }
+
+/* ── Lang visibility ─────────────────────────────────────────── */
+[data-lang="ru"] { display: none; }
+html[lang="ru"] [data-lang="en"] { display: none; }
+html[lang="ru"] [data-lang="ru"] { display: block; }
+
+/* Also for inline spans */
+html[lang="ru"] span[data-lang="en"] { display: none; }
+html[lang="ru"] span[data-lang="ru"] { display: inline; }
+span[data-lang="ru"] { display: none; }
+
+/* ── Mobile topbar ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .topbar { gap: var(--space-2); padding: 9px 14px; }
+  .topbar__sep,
+  .topbar__back { display: none; }
+  .topbar__pdf { font-size: 12px; padding: 4px 10px; }
+  .lang-toggle__btn { padding: 4px 10px; font-size: 12px; }
+}
+
+@media print {
+  .topbar { display: none; }
+  .doc-card { box-shadow: none; padding: 20px 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ TOPBAR ══════════════════════ -->
+<header class="topbar">
+  <a class="topbar__brand" href="../">S · <span>SRACO Web</span></a>
+  <div class="topbar__sep" aria-hidden="true"></div>
+  <a class="topbar__back" href="../">Back to dashboard</a>
+
+  <div class="topbar__spacer"></div>
+
+  <a class="topbar__pdf" href="../materials/SRACO-Website-project-SOW.pdf" target="_blank" rel="noopener">Open PDF ↗</a>
+
+  <div class="lang-toggle" role="group" aria-label="Document language">
+    <button class="lang-toggle__btn" type="button" data-lang-btn="en">EN</button>
+    <button class="lang-toggle__btn" type="button" data-lang-btn="ru">RU</button>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════ PAGE ════════════════════════ -->
+<main class="page-wrap">
+<article class="doc-card">
+
+  <div class="runhead">
+    <strong>SRACO GROUP</strong>
+    <span data-lang="en">Corporate Website — Marketing Brief to IT</span>
+    <span data-lang="ru">Корпоративный сайт — маркетинговый бриф для IT</span>
+  </div>
+
+
+  <!-- ═══ 0 · Title page ════════════════════════════════════════ -->
+  <section class="sow-section" id="s0">
+
+    <div data-lang="en">
+      <div class="title-block">
+        <h1 class="title-block__h1">SRACO GROUP</h1>
+        <p class="title-block__sub">Corporate Website Redevelopment</p>
+        <hr class="title-block__goldrule">
+        <p class="title-block__doctype">Marketing Brief &amp; Requirements for IT</p>
+      </div>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <tbody>
+            <tr><td class="lbl">Prepared By</td><td>Marketing &amp; Communications Department</td></tr>
+            <tr><td class="lbl">Submitted To</td><td>SRACO ITC Company</td></tr>
+            <tr><td class="lbl">Project Nature</td><td>Joint Initiative — Marketing &amp; IT</td></tr>
+            <tr><td class="lbl">Document Version</td><td>2.0</td></tr>
+            <tr><td class="lbl">Date</td><td>June 2026</td></tr>
+            <tr><td class="lbl">Classification</td><td>Internal — Confidential</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div data-lang="ru">
+      <div class="title-block">
+        <h1 class="title-block__h1">SRACO GROUP</h1>
+        <p class="title-block__sub">Редизайн корпоративного сайта</p>
+        <hr class="title-block__goldrule">
+        <p class="title-block__doctype">Маркетинговый бриф и требования к IT</p>
+      </div>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <tbody>
+            <tr><td class="lbl">Подготовлено</td><td>Департамент маркетинга и коммуникаций</td></tr>
+            <tr><td class="lbl">Кому направлено</td><td>SRACO ITC Company</td></tr>
+            <tr><td class="lbl">Характер проекта</td><td>Совместная инициатива — маркетинг и IT</td></tr>
+            <tr><td class="lbl">Версия документа</td><td>2.0</td></tr>
+            <tr><td class="lbl">Дата</td><td>Июнь 2026</td></tr>
+            <tr><td class="lbl">Гриф</td><td>Внутренний — конфиденциально</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 1 · The Problem ═══════════════════════════════════════ -->
+  <section class="sow-section" id="s1">
+
+    <div data-lang="en">
+      <h2 class="sec-h">1. The Problem with Our Current Website</h2>
+      <p>Before defining what we are building, it is worth being clear about what we are replacing — and why it is failing us commercially.</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead>
+            <tr><th>What the Current Site Gets Wrong</th><th>The Business Cost</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>No project portfolio or case studies</td><td>Clients cannot evaluate our capabilities before reaching out — we lose consideration before the conversation starts</td></tr>
+            <tr><td>No division-level content depth</td><td>Each of our four divisions is underrepresented; potential clients cannot find the specific service they are looking for</td></tr>
+            <tr><td>Visually outdated and template-based</td><td>We are benchmarked against competitors who look like they belong to the future; we currently do not</td></tr>
+            <tr><td>English-dominant with poor Arabic UX</td><td>We operate in a Saudi-first market; our primary language should lead, not be an afterthought</td></tr>
+            <tr><td>No lead capture or conversion path</td><td>There is no structured way for a prospective client to engage — no RFP flow, no quote request, no division-specific routing</td></tr>
+            <tr><td>Not mobile-optimized</td><td>A significant share of our audience will access us on mobile; the current experience is poor</td></tr>
+            <tr><td>No news, no announcements, no media</td><td>We have had meaningful company milestones that our digital presence has never communicated</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">1. Проблема текущего сайта</h2>
+      <p>Прежде чем определять, что мы строим, стоит честно зафиксировать, что мы заменяем — и почему это коммерчески нас подводит.</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead>
+            <tr><th>Что не так с текущим сайтом</th><th>Цена для бизнеса</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Нет портфолио проектов и кейсов</td><td>Клиенты не могут оценить наши возможности до обращения — мы выбываем из рассмотрения ещё до начала разговора</td></tr>
+            <tr><td>Нет глубины контента на уровне дивизионов</td><td>Каждый из четырёх дивизионов недопредставлен; потенциальные клиенты не находят нужную им услугу</td></tr>
+            <tr><td>Визуально устаревший, шаблонный</td><td>Нас сравнивают с конкурентами, которые выглядят как будущее отрасли; мы — пока нет</td></tr>
+            <tr><td>Доминирует английский, слабый арабский UX</td><td>Мы работаем на рынке «Саудовская Аравия прежде всего»; наш основной язык должен вести, а не быть довеском</td></tr>
+            <tr><td>Нет захвата лидов и конверсионного пути</td><td>У потенциального клиента нет структурированного способа обратиться — ни RFP-потока, ни запроса расчёта, ни маршрутизации по дивизионам</td></tr>
+            <tr><td>Не оптимизирован под мобильные</td><td>Существенная часть аудитории заходит с мобильных; текущий опыт — слабый</td></tr>
+            <tr><td>Нет новостей, анонсов, медиа</td><td>У компании были значимые вехи, о которых её цифровое присутствие так и не рассказало</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 2 · Marketing Vision ══════════════════════════════════ -->
+  <section class="sow-section" id="s2">
+
+    <div data-lang="en">
+      <h2 class="sec-h">2. What We Are Building — The Marketing Vision</h2>
+      <p>The new SRACO website must function as three things simultaneously:</p>
+      <ul>
+        <li>A <strong>credibility platform</strong> — communicating our scale, history, certifications, and client relationships to enterprise buyers and government stakeholders.</li>
+        <li>A <strong>capability showcase</strong> — presenting each division's services, portfolio, and expertise in a way that converts interest into enquiry.</li>
+        <li>A <strong>growth engine</strong> — generating leads, supporting business development, and establishing SRACO's digital authority in the Saudi market.</li>
+      </ul>
+      <p class="sow-quote">One Group. Four Divisions. One premium digital experience.</p>
+      <p>The tone, design, and content strategy must position SRACO as a modern, forward-looking enterprise — not merely a traditional services contractor. We are competing for enterprise and government contracts at a significant scale, and our digital presence must reflect that.</p>
+      <p>The recommended headline positioning for the new website is:</p>
+      <div class="sow-banner">"Building Saudi Arabia's Future — Across Every Sector"</div>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">2. Что мы строим — маркетинговое видение</h2>
+      <p>Новый сайт SRACO должен одновременно выполнять три роли:</p>
+      <ul>
+        <li><strong>Платформа доверия</strong> — транслирует наш масштаб, историю, сертификации и клиентские отношения корпоративным заказчикам и государственным стейкхолдерам.</li>
+        <li><strong>Витрина компетенций</strong> — показывает услуги, портфолио и экспертизу каждого дивизиона так, чтобы интерес превращался в обращение.</li>
+        <li><strong>Двигатель роста</strong> — генерирует лиды, поддерживает развитие бизнеса и утверждает цифровой авторитет SRACO на саудовском рынке.</li>
+      </ul>
+      <p class="sow-quote">Одна группа. Четыре дивизиона. Один премиальный цифровой опыт.</p>
+      <p>Тон, дизайн и контент-стратегия должны позиционировать SRACO как современное, устремлённое в будущее предприятие — а не просто традиционного сервисного подрядчика. Мы конкурируем за корпоративные и государственные контракты серьёзного масштаба, и наше цифровое присутствие обязано это отражать.</p>
+      <p>Рекомендуемое заглавное позиционирование нового сайта:</p>
+      <div class="sow-banner">«Строим будущее Саудовской Аравии — во всех секторах»</div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 3 · Audience ══════════════════════════════════════════ -->
+  <section class="sow-section" id="s3">
+
+    <div data-lang="en">
+      <h2 class="sec-h">3. Our Audience — Who the Website Must Speak To</h2>
+      <p>Every design decision, every page, and every piece of content on this website must serve one of the following audience segments. IT must ensure the platform can support differentiated user journeys for each.</p>
+      <h3 class="sub-h">3.1 Primary Audiences</h3>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Audience Segment</th><th>What They Need from the Website</th></tr></thead>
+          <tbody>
+            <tr><td>Corporate Decision-Makers (C-Suite, Procurement, Operations)</td><td>Immediate credibility signals: client logos, project scale, years of operation, certifications. A clear path to contact or RFP submission.</td></tr>
+            <tr><td>Government &amp; Semi-Government Entities (Ministries, ARAMCO, SABIC, NEOM)</td><td>Compliance credentials, track record with comparable entities, clear Vision 2030 alignment language, and national content commitment.</td></tr>
+            <tr><td>Real Estate Developers &amp; Hospitality Groups</td><td>Construction portfolio with visual project showcases, FM capabilities, and evidence of end-to-end delivery.</td></tr>
+            <tr><td>HR &amp; Talent Managers seeking workforce solutions</td><td>Staffing sector experience, speed of deployment, headcount scale, and a structured engagement process.</td></tr>
+            <tr><td>IT Directors &amp; CISOs at enterprise organizations</td><td>Certifications, service scope, cybersecurity credentials, and a technically credible presentation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 class="sub-h">3.2 Secondary Audiences</h3>
+      <ul>
+        <li>Strategic partners, subcontractors, and vendors exploring collaboration opportunities.</li>
+        <li>Job seekers and prospective employees across all four divisions.</li>
+        <li>Media, industry analysts, and sector associations.</li>
+        <li>International companies exploring Saudi market entry with a local partner.</li>
+      </ul>
+      <h3 class="sub-h">3.3 Language Strategy</h3>
+      <p>Both languages.</p>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">3. Наша аудитория — с кем должен говорить сайт</h2>
+      <p>Каждое дизайн-решение, каждая страница и каждая единица контента сайта должны работать на один из следующих сегментов аудитории. IT должен обеспечить поддержку платформой отдельных пользовательских сценариев для каждого из них.</p>
+      <h3 class="sub-h">3.1 Основные аудитории</h3>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Сегмент аудитории</th><th>Что им нужно от сайта</th></tr></thead>
+          <tbody>
+            <tr><td>Корпоративные ЛПР (топ-менеджмент, закупки, операционные службы)</td><td>Мгновенные сигналы доверия: логотипы клиентов, масштаб проектов, годы работы, сертификации. Понятный путь к контакту или подаче RFP.</td></tr>
+            <tr><td>Государственные и квазигосударственные структуры (министерства, ARAMCO, SABIC, NEOM)</td><td>Комплаенс-подтверждения, послужной список с сопоставимыми структурами, явный язык соответствия Vision 2030 и приверженность национальному контенту.</td></tr>
+            <tr><td>Девелоперы недвижимости и гостиничные группы</td><td>Строительное портфолио с визуальными шоукейсами проектов, FM-возможности и доказательства реализации «под ключ».</td></tr>
+            <tr><td>HR-руководители и менеджеры по талантам, ищущие кадровые решения</td><td>Опыт в стаффинге, скорость развёртывания, масштаб численности и структурированный процесс взаимодействия.</td></tr>
+            <tr><td>IT-директора и CISO корпоративных организаций</td><td>Сертификации, объём услуг, компетенции в кибербезопасности и технически убедительная подача.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 class="sub-h">3.2 Вторичные аудитории</h3>
+      <ul>
+        <li>Стратегические партнёры, субподрядчики и поставщики, ищущие возможности сотрудничества.</li>
+        <li>Соискатели и потенциальные сотрудники по всем четырём дивизионам.</li>
+        <li>Медиа, отраслевые аналитики и профессиональные ассоциации.</li>
+        <li>Международные компании, выходящие на саудовский рынок с локальным партнёром.</li>
+      </ul>
+      <h3 class="sub-h">3.3 Языковая стратегия</h3>
+      <p>Оба языка.</p>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 4 · Brand & Content ════════════════════════════════════ -->
+  <section class="sow-section" id="s4">
+
+    <div data-lang="en">
+      <h2 class="sec-h">4. Brand &amp; Content Strategy</h2>
+      <h3 class="sub-h">4.1 Brand Voice &amp; Tone</h3>
+      <p>The website must communicate with confidence, clarity, and authority — without corporate jargon. Our audience are senior executives and procurement leaders; they respond to evidence, not adjectives.</p>
+      <ul>
+        <li>Lead with outcomes, not features. Show what we have delivered, not just what we offer.</li>
+        <li>Write for a non-technical executive audience. Scannable paragraphs, clear headers, and direct language.</li>
+        <li>Align every section to Vision 2030 where relevant — this is not cosmetic; it is commercially strategic.</li>
+        <li>Highlight local content (Saudization) commitments naturally throughout the narrative.</li>
+      </ul>
+      <h3 class="sub-h">4.2 Content Pillars</h3>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Content Pillar</th><th>Purpose &amp; Placement</th></tr></thead>
+          <tbody>
+            <tr><td>Projects</td><td>The hero content. Detailed case studies with real photography, scope descriptions, client context, and measurable outcomes. Every division needs this.</td></tr>
+            <tr><td>Clients</td><td>Logos, testimonials, and sector-organized partnerships. Credibility through association.</td></tr>
+            <tr><td>Scale &amp; Growth</td><td>Statistics counters, geographic expansion story, Vision 2030 positioning. Communicates SRACO's momentum.</td></tr>
+            <tr><td>People</td><td>Leadership team, culture, Saudization commitment, and workforce diversity.</td></tr>
+            <tr><td>Credibility</td><td>ISO certifications, IKTVA, awards, compliance credentials, and standards alignment.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 class="sub-h">4.3 Minimum Launch Content (Marketing Commitment)</h3>
+      <p>Marketing commits to providing the following content by the agreed content freeze date:</p>
+      <ul>
+        <li>Minimum 15 featured project pages across all four divisions (approximately 4 per division), each with project description, client, scope, photography, and outcomes.</li>
+        <li>Client logo wall with a minimum of 20 client logos, organized by sector.</li>
+        <li>Company statistics: years in operation, total projects delivered, client count, and employee headcount.</li>
+        <li>Leadership team bios and professional photography for all profiled executives.</li>
+        <li>All division service descriptions across Facility Management, Construction, Consulting &amp; Staffing, and IT &amp; Cybersecurity.</li>
+        <li>Certifications and accreditations content (ISO, IKTVA, Vision 2030 alignment, and others).</li>
+        <li>A minimum of one news article or announcement per division for launch.</li>
+      </ul>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">4. Бренд и контент-стратегия</h2>
+      <h3 class="sub-h">4.1 Голос и тон бренда</h3>
+      <p>Сайт должен говорить уверенно, ясно и авторитетно — без корпоративного жаргона. Наша аудитория — топ-руководители и лидеры закупок; они реагируют на доказательства, а не на прилагательные.</p>
+      <ul>
+        <li>Вести от результатов, а не от функций. Показывать, что мы реализовали, а не только что предлагаем.</li>
+        <li>Писать для нетехнической руководящей аудитории: сканируемые абзацы, понятные заголовки, прямой язык.</li>
+        <li>Привязывать каждый раздел к Vision 2030, где это уместно — это не косметика, а коммерческая стратегия.</li>
+        <li>Естественно подчёркивать обязательства по локальному контенту (саудизации) по всему повествованию.</li>
+      </ul>
+      <h3 class="sub-h">4.2 Контентные опоры</h3>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Контентная опора</th><th>Назначение и размещение</th></tr></thead>
+          <tbody>
+            <tr><td>Проекты</td><td>Главный контент. Детальные кейсы с настоящей фотографией, описанием объёма работ, контекстом клиента и измеримыми результатами. Нужны каждому дивизиону.</td></tr>
+            <tr><td>Клиенты</td><td>Логотипы, отзывы и партнёрства, сгруппированные по секторам. Доверие через ассоциацию.</td></tr>
+            <tr><td>Масштаб и рост</td><td>Счётчики статистики, история географической экспансии, позиционирование Vision 2030. Передаёт динамику SRACO.</td></tr>
+            <tr><td>Люди</td><td>Команда руководства, культура, приверженность саудизации и разнообразие персонала.</td></tr>
+            <tr><td>Доверие</td><td>Сертификации ISO, IKTVA, награды, комплаенс-подтверждения и соответствие стандартам.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3 class="sub-h">4.3 Минимальный контент к запуску (обязательство маркетинга)</h3>
+      <p>Маркетинг обязуется предоставить следующий контент к согласованной дате контент-фриза:</p>
+      <ul>
+        <li>Минимум 15 страниц флагманских проектов по всем четырём дивизионам (примерно по 4 на дивизион), каждая — с описанием проекта, клиентом, объёмом, фотографией и результатами.</li>
+        <li>Стена логотипов клиентов: минимум 20 логотипов, сгруппированных по секторам.</li>
+        <li>Статистика компании: годы работы, всего реализованных проектов, число клиентов и численность сотрудников.</li>
+        <li>Биографии руководства и профессиональная фотосъёмка всех представленных руководителей.</li>
+        <li>Описания услуг всех дивизионов: Facility Management, Construction, Consulting &amp; Staffing и IT &amp; Cybersecurity.</li>
+        <li>Контент по сертификациям и аккредитациям (ISO, IKTVA, соответствие Vision 2030 и другие).</li>
+        <li>Минимум одна новость или анонс на каждый дивизион к запуску.</li>
+      </ul>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 5 · Website Structure ══════════════════════════════════ -->
+  <section class="sow-section" id="s5">
+
+    <div data-lang="en">
+      <h2 class="sec-h">5. Website Structure — Marketing Requirements per Section</h2>
+      <p>The following architecture is required. IT must ensure the CMS supports independent content management for each section without developer involvement.</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Section</th><th>Marketing Requirements</th></tr></thead>
+          <tbody>
+            <tr><td>Homepage</td><td>Full-screen hero with flagship project visuals and headline messaging. Key metrics counters (years, projects, clients, employees). Division quick links. Featured projects carousel. Client logo strip. Latest news. CTA: Contact Us / Get a Quote.</td></tr>
+            <tr><td>About SRACO</td><td>Company history with milestone timeline. Vision, Mission &amp; Values. Leadership team with bios and photography. Certifications, licenses, and awards. Geographic footprint and expansion map.</td></tr>
+            <tr><td>Companies — ×5</td><td>Dedicated landing page per company. Sub-pages per company: Services Overview, Projects, Contact. Consistent layout across all four for brand cohesion. Each company page must be self-contained for direct entry via search or campaign landing.</td></tr>
+            <tr><td>Solutions</td><td>All companies' solutions combined.</td></tr>
+            <tr><td>Projects Portfolio</td><td>Filterable gallery by division, sector, location, and project type. Individual project pages with description, client, scope, imagery, video, and outcomes. Featured case studies with measurable results. This is our most commercially important content section.</td></tr>
+            <tr><td>Clients</td><td>Client logo wall organized by sector. Testimonials and attributed quotes. Selected client success stories.</td></tr>
+            <tr><td>News &amp; Media</td><td>Press releases and company announcements. Thought leadership and industry insights. Photo and video gallery. Architecture must support future ERP integration for automated news publishing.</td></tr>
+            <tr><td>Careers</td><td>Open positions across all divisions. Life at SRACO culture section. Simple application form with CV upload. Architecture must support future ERP integration for live job feeds.</td></tr>
+            <tr><td>Contact</td><td>Contact form with division-specific routing — enquiries must reach the correct division, not a generic inbox. Office locations with embedded Google Maps. Social media links.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">5. Структура сайта — требования маркетинга по разделам</h2>
+      <p>Требуется следующая архитектура. IT должен обеспечить, чтобы CMS поддерживала независимое управление контентом каждого раздела без участия разработчиков.</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Раздел</th><th>Требования маркетинга</th></tr></thead>
+          <tbody>
+            <tr><td>Главная</td><td>Полноэкранный hero с визуалами флагманских проектов и заглавным сообщением. Счётчики ключевых метрик (годы, проекты, клиенты, сотрудники). Быстрые ссылки на дивизионы. Карусель избранных проектов. Лента логотипов клиентов. Последние новости. CTA: «Связаться с нами» / «Получить расчёт».</td></tr>
+            <tr><td>О компании SRACO</td><td>История компании с таймлайном вех. Видение, миссия и ценности. Команда руководства с биографиями и фото. Сертификации, лицензии и награды. География присутствия и карта экспансии.</td></tr>
+            <tr><td>Компании — ×5</td><td>Отдельный лендинг для каждой компании. Подстраницы каждой компании: обзор услуг, проекты, контакты. Единый макет для всех четырёх ради цельности бренда. Каждая страница компании должна быть самодостаточной для прямого входа из поиска или с рекламной кампании.</td></tr>
+            <tr><td>Решения</td><td>Решения всех компаний вместе.</td></tr>
+            <tr><td>Портфолио проектов</td><td>Галерея с фильтрами по дивизиону, сектору, локации и типу проекта. Отдельные страницы проектов с описанием, клиентом, объёмом, фото, видео и результатами. Избранные кейсы с измеримыми результатами. Это наш самый коммерчески важный раздел контента.</td></tr>
+            <tr><td>Клиенты</td><td>Стена логотипов клиентов по секторам. Отзывы и атрибутированные цитаты. Избранные истории успеха клиентов.</td></tr>
+            <tr><td>Новости и медиа</td><td>Пресс-релизы и анонсы компании. Экспертные материалы и отраслевая аналитика. Фото- и видеогалерея. Архитектура должна поддерживать будущую интеграцию с ERP для автоматической публикации новостей.</td></tr>
+            <tr><td>Карьера</td><td>Открытые вакансии по всем дивизионам. Раздел о культуре «Жизнь в SRACO». Простая форма отклика с загрузкой CV. Архитектура должна поддерживать будущую интеграцию с ERP для живой ленты вакансий.</td></tr>
+            <tr><td>Контакты</td><td>Контактная форма с маршрутизацией по дивизионам — обращения должны попадать в нужный дивизион, а не в общий ящик. Адреса офисов со встроенными Google Maps. Ссылки на соцсети.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 6 · Design Direction ══════════════════════════════════ -->
+  <section class="sow-section" id="s6">
+
+    <div data-lang="en">
+      <h2 class="sec-h">6. Design Direction &amp; Visual References</h2>
+      <p>Marketing is responsible for art direction. The following design principles are non-negotiable and must be reflected in the vendor brief IT issues.</p>
+      <h3 class="sub-h">6.1 Design Principles</h3>
+      <ul>
+        <li>Photography-forward. Real project photography must lead every key page. No generic stock imagery.</li>
+        <li>Full-width hero sections on all key landing pages — immersive, not templated.</li>
+        <li>Clean white space with a strong typographic hierarchy. The design must breathe.</li>
+        <li>Statistics and impact numbers displayed prominently as animated counters on the homepage.</li>
+        <li>Premium and corporate in aesthetic — not playful, not startup, not generic SaaS.</li>
+        <li>Consistent division layouts — each division page follows the same structure, reinforcing the Group identity.</li>
+      </ul>
+      <h3 class="sub-h">6.2 Design References</h3>
+      <p>The following websites are approved by Marketing as design and structural references. These must be shared with any shortlisted vendor as part of the brief.</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Reference</th><th>URL</th><th>What to Adopt</th></tr></thead>
+          <tbody>
+            <tr><td>Mace Group</td><td><a href="https://macegroup.com" target="_blank" rel="noopener">macegroup.com</a></td><td>Multi-division corporate structure. Full-screen video hero. Immersive project storytelling. Clean premium design language that balances scale with clarity.</td></tr>
+            <tr><td>Aramco Digital</td><td><a href="https://aramcodigital.com" target="_blank" rel="noopener">aramcodigital.com</a></td><td>A Saudi-born enterprise digital platform that reflects Vision 2030 ambition. Modern, sophisticated, and regionally relevant. Strong use of animation, bold typography, and a premium tech-forward aesthetic — this is the standard we are benchmarking against in the Saudi market.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">6. Дизайн-направление и визуальные референсы</h2>
+      <p>За арт-дирекшн отвечает маркетинг. Следующие принципы дизайна не подлежат обсуждению и должны быть отражены в брифе для вендора, который выпустит IT.</p>
+      <h3 class="sub-h">6.1 Принципы дизайна</h3>
+      <ul>
+        <li>Фотография на первом плане. Настоящая проектная съёмка должна вести каждую ключевую страницу. Никакого обезличенного стока.</li>
+        <li>Полноэкранные hero-секции на всех ключевых лендингах — иммерсивные, не шаблонные.</li>
+        <li>Чистое воздушное пространство и сильная типографическая иерархия. Дизайн должен дышать.</li>
+        <li>Статистика и ключевые цифры — на видном месте, анимированными счётчиками на главной.</li>
+        <li>Премиальная корпоративная эстетика — не игривая, не стартаповская, не обезличенный SaaS.</li>
+        <li>Единые макеты дивизионов — каждая страница дивизиона повторяет одну и ту же структуру, укрепляя идентичность Группы.</li>
+      </ul>
+      <h3 class="sub-h">6.2 Дизайн-референсы</h3>
+      <p>Следующие сайты утверждены маркетингом как дизайн- и структурные референсы. Их необходимо передать каждому вендору из шорт-листа в составе брифа.</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Референс</th><th>URL</th><th>Что перенять</th></tr></thead>
+          <tbody>
+            <tr><td>Mace Group</td><td><a href="https://macegroup.com" target="_blank" rel="noopener">macegroup.com</a></td><td>Мультидивизионная корпоративная структура. Полноэкранный видео-hero. Иммерсивный сторителлинг проектов. Чистый премиальный дизайн-язык, балансирующий масштаб и ясность.</td></tr>
+            <tr><td>Aramco Digital</td><td><a href="https://aramcodigital.com" target="_blank" rel="noopener">aramcodigital.com</a></td><td>Рождённая в Саудовской Аравии корпоративная цифровая платформа, отражающая амбицию Vision 2030. Современная, утончённая и регионально релевантная. Активное использование анимации, смелая типографика и премиальная технологичная эстетика — это планка, по которой мы меряем себя на саудовском рынке.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 7 · Lead Generation ════════════════════════════════════ -->
+  <section class="sow-section" id="s7">
+
+    <div data-lang="en">
+      <h2 class="sec-h">7. Lead Generation &amp; Conversion Requirements</h2>
+      <p>The website must function as an active business development tool, not a passive information brochure. The following conversion elements are required from Marketing's perspective:</p>
+      <ul>
+        <li>A prominent, persistent call-to-action on every key page — minimum options: 'Contact Us' and 'Request a Proposal'.</li>
+        <li>Division-specific contact routing: a single enquiry form must route to the correct division's commercial team based on the selected service category.</li>
+        <li>An RFP or 'Get a Quote' flow — structured enough to qualify the lead, short enough not to lose it.</li>
+        <li>All form submissions must feed into the CRM system. No leads to land in an unmonitored inbox.</li>
+        <li>Thank-you confirmation pages after form submission — these are trackable events and part of our conversion funnel.</li>
+        <li>Google Analytics 4 event tracking on all key conversion points: form views, submissions, division page visits, and project portfolio interactions.</li>
+      </ul>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">7. Требования к лидогенерации и конверсии</h2>
+      <p>Сайт должен работать как активный инструмент развития бизнеса, а не пассивная информационная брошюра. С точки зрения маркетинга необходимы следующие конверсионные элементы:</p>
+      <ul>
+        <li>Заметный, постоянно присутствующий призыв к действию на каждой ключевой странице — минимум варианты: «Связаться с нами» и «Запросить предложение».</li>
+        <li>Маршрутизация обращений по дивизионам: единая форма должна направлять обращение в коммерческую команду нужного дивизиона в зависимости от выбранной категории услуг.</li>
+        <li>RFP-флоу или флоу «Получить расчёт» — достаточно структурированный, чтобы квалифицировать лид, и достаточно короткий, чтобы его не потерять.</li>
+        <li>Все отправки форм должны попадать в CRM-систему. Ни один лид не должен оседать в неотслеживаемом ящике.</li>
+        <li>Страницы благодарности после отправки формы — это отслеживаемые события и часть нашей конверсионной воронки.</li>
+        <li>Событийный трекинг Google Analytics 4 по всем ключевым точкам конверсии: просмотры форм, отправки, посещения страниц дивизионов и взаимодействия с портфолио проектов.</li>
+      </ul>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 8 · Technical Requirements ════════════════════════════ -->
+  <section class="sow-section" id="s8">
+
+    <div data-lang="en">
+      <h2 class="sec-h">8. Marketing's Technical Requirements for IT</h2>
+      <p>The following technical requirements are driven by Marketing's operational needs and campaign objectives. These must be implemented by IT or factored into the vendor scope.</p>
+      <h3 class="sub-h">8.1 CMS — Content Ownership</h3>
+      <p>Marketing must be able to manage all content on the website without raising IT tickets. We would like to know the flexibility regarding this matter.</p>
+      <ul>
+        <li>Add, edit, and publish project case studies.</li>
+        <li>Post news articles and press releases.</li>
+        <li>Update division service descriptions and leadership bios.</li>
+        <li>Manage the client logo wall.</li>
+        <li>Update certifications and company statistics.</li>
+      </ul>
+      <p>The CMS must have a clean, intuitive interface. Marketing team members are not developers.</p>
+      <h3 class="sub-h">8.2 SEO — Our Discoverability Strategy</h3>
+      <p>The website must be built for search from day one. Our target clients search for services before they search for companies.</p>
+      <ul>
+        <li>Full bilingual SEO implementation — Arabic and English keyword targeting in parallel.</li>
+        <li>Technical SEO: metadata management per page, structured data/schema markup, XML sitemaps, and canonical tag implementation across bilingual page pairs.</li>
+        <li>Local SEO optimization targeting high-intent terms: 'facility management Saudi Arabia', 'construction company Riyadh', 'IT cybersecurity KSA', and equivalents in Arabic.</li>
+        <li>Clean URL structure aligned to Marketing's navigation: /divisions/facility-management, /projects/[project-name].</li>
+        <li>Page speed is an SEO factor — the Lighthouse performance target of 85+ is a Marketing requirement, not just a technical benchmark.</li>
+      </ul>
+      <h3 class="sub-h">8.3 Analytics &amp; Campaign Tracking</h3>
+      <p><span class="sow-mark">We are open to suggesting for us suitable tracking methods</span></p>
+      <ul>
+        <li>Google Analytics 4 implementation with full event tracking across all conversion points.</li>
+        <li>Google Tag Manager for Marketing-controlled tag deployment — Marketing must be able to deploy tracking tags independently.</li>
+        <li>Arabic vs. English traffic split tracked and reported monthly.</li>
+        <li>UTM parameter support for campaign landing pages and paid media tracking.</li>
+      </ul>
+      <h3 class="sub-h">8.4 Performance — This Affects Our Brand Perception</h3>
+      <ul>
+        <li>Page load time under 3 seconds. A slow website reflects poorly on SRACO's brand and directly increases bounce rate.</li>
+        <li>Mobile-first design and development. Our audience accesses us on mobile; this is not optional.</li>
+        <li>CDN configuration optimized for GCC region delivery.</li>
+        <li>WebP image format and lazy loading for media-heavy sections.</li>
+      </ul>
+      <h3 class="sub-h">8.5 Integrations Required</h3>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Integration</th><th>Marketing Need</th><th>Priority</th></tr></thead>
+          <tbody>
+            <tr><td>CRM System</td><td>All form submissions captured and routed to sales pipeline</td><td>Launch</td></tr>
+            <tr><td>Google Analytics 4 + GTM</td><td>Full funnel tracking; campaign attribution; traffic reporting</td><td>Launch</td></tr>
+            <tr><td>Google Maps</td><td>Office locations for Contact page</td><td>Launch</td></tr>
+            <tr><td>LinkedIn</td><td>Optional company feed integration for News section</td><td>Post-launch</td></tr>
+            <tr><td>ERP — News Feed</td><td>Automated publishing of announcements from ERP to News section</td><td>Post-launch</td></tr>
+            <tr><td>ERP — Careers Feed</td><td>Live job listings synced from ERP to Careers section</td><td>Post-launch</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">8. Технические требования маркетинга к IT</h2>
+      <p>Следующие технические требования продиктованы операционными нуждами маркетинга и задачами кампаний. Они должны быть реализованы IT или включены в скоуп вендора.</p>
+      <h3 class="sub-h">8.1 CMS — владение контентом</h3>
+      <p>Маркетинг должен иметь возможность управлять всем контентом сайта без заведения IT-тикетов. Хотели бы понять, какая гибкость возможна в этом вопросе.</p>
+      <ul>
+        <li>Добавлять, редактировать и публиковать кейсы проектов.</li>
+        <li>Публиковать новости и пресс-релизы.</li>
+        <li>Обновлять описания услуг дивизионов и биографии руководства.</li>
+        <li>Управлять стеной логотипов клиентов.</li>
+        <li>Обновлять сертификации и статистику компании.</li>
+      </ul>
+      <p>У CMS должен быть чистый, интуитивный интерфейс. Сотрудники маркетинга — не разработчики.</p>
+      <h3 class="sub-h">8.2 SEO — наша стратегия находимости</h3>
+      <p>Сайт должен строиться под поиск с первого дня. Наши целевые клиенты ищут услуги раньше, чем компании.</p>
+      <ul>
+        <li>Полная двуязычная SEO-реализация — параллельный таргетинг арабских и английских ключевых слов.</li>
+        <li>Техническое SEO: управление метаданными на уровне страницы, структурированные данные / schema-разметка, XML-сайтмапы и canonical-теги для двуязычных пар страниц.</li>
+        <li>Локальная SEO-оптимизация под высокоинтентные запросы: 'facility management Saudi Arabia', 'construction company Riyadh', 'IT cybersecurity KSA' и их эквиваленты на арабском.</li>
+        <li>Чистая структура URL, согласованная с навигацией маркетинга: /divisions/facility-management, /projects/[project-name].</li>
+        <li>Скорость страниц — фактор SEO: цель Lighthouse performance 85+ — требование маркетинга, а не просто технический бенчмарк.</li>
+      </ul>
+      <h3 class="sub-h">8.3 Аналитика и трекинг кампаний</h3>
+      <p><span class="sow-mark">Мы открыты к тому, чтобы нам предложили подходящие методы трекинга</span></p>
+      <ul>
+        <li>Внедрение Google Analytics 4 с полным событийным трекингом по всем точкам конверсии.</li>
+        <li>Google Tag Manager для деплоя тегов под контролем маркетинга — маркетинг должен иметь возможность разворачивать трекинг-теги самостоятельно.</li>
+        <li>Раздельный учёт арабского и английского трафика с ежемесячной отчётностью.</li>
+        <li>Поддержка UTM-параметров для лендингов кампаний и трекинга платных размещений.</li>
+      </ul>
+      <h3 class="sub-h">8.4 Производительность — это влияет на восприятие бренда</h3>
+      <ul>
+        <li>Время загрузки страницы — менее 3 секунд. Медленный сайт плохо отражается на бренде SRACO и напрямую повышает показатель отказов.</li>
+        <li>Mobile-first дизайн и разработка. Наша аудитория заходит с мобильных; это не опция.</li>
+        <li>Конфигурация CDN, оптимизированная под доставку в регионе GCC (Персидский залив).</li>
+        <li>Формат изображений WebP и lazy loading для разделов, насыщенных медиа.</li>
+      </ul>
+      <h3 class="sub-h">8.5 Необходимые интеграции</h3>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Интеграция</th><th>Потребность маркетинга</th><th>Приоритет</th></tr></thead>
+          <tbody>
+            <tr><td>CRM-система</td><td>Все отправки форм фиксируются и направляются в воронку продаж</td><td>К запуску</td></tr>
+            <tr><td>Google Analytics 4 + GTM</td><td>Полный трекинг воронки; атрибуция кампаний; отчётность по трафику</td><td>К запуску</td></tr>
+            <tr><td>Google Maps</td><td>Адреса офисов на странице контактов</td><td>К запуску</td></tr>
+            <tr><td>LinkedIn</td><td>Опциональная интеграция ленты компании в раздел новостей</td><td>После запуска</td></tr>
+            <tr><td>ERP — лента новостей</td><td>Автоматическая публикация анонсов из ERP в раздел новостей</td><td>После запуска</td></tr>
+            <tr><td>ERP — лента вакансий</td><td>Живые вакансии, синхронизируемые из ERP в раздел карьеры</td><td>После запуска</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 9 · Security & Compliance ═════════════════════════════ -->
+  <section class="sow-section" id="s9">
+
+    <div data-lang="en">
+      <h2 class="sec-h">9. Security &amp; Compliance — IT Ownership</h2>
+      <p>The following requirements are owned and led by IT. Marketing acknowledges these as mandatory conditions for launch and will not push for go-live until IT confirms they are met.</p>
+      <ul>
+        <li>SSL/TLS implementation with HTTPS enforced across the entire site.</li>
+        <li>Web Application Firewall (WAF) deployed before production. Given SRACO's IT &amp; Cybersecurity division, our own website must set the standard.</li>
+        <li>OWASP Top 10 secure coding standards applied throughout development.</li>
+        <li>Third-party Vulnerability Assessment &amp; Penetration Testing (VAPT) completed before launch. Vendor must remediate all findings.</li>
+        <li>Role-based CMS access: Marketing editors must not have access to infrastructure settings; IT administrators must not be able to alter published content without Marketing approval.</li>
+        <li>Automated backups with documented recovery procedures.</li>
+        <li>Hosting within the GCC region: AWS Bahrain, Azure UAE North, or equivalent — for performance, data residency, and regulatory alignment.</li>
+      </ul>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">9. Безопасность и комплаенс — зона ответственности IT</h2>
+      <p>Следующие требования находятся в ведении IT и ведутся им. Маркетинг признаёт их обязательными условиями запуска и не будет настаивать на go-live, пока IT не подтвердит их выполнение.</p>
+      <ul>
+        <li>Внедрение SSL/TLS с принудительным HTTPS на всём сайте.</li>
+        <li>Web Application Firewall (WAF), развёрнутый до продакшна. С учётом наличия у SRACO дивизиона IT &amp; Cybersecurity наш собственный сайт обязан задавать стандарт.</li>
+        <li>Стандарты безопасной разработки OWASP Top 10 на протяжении всего цикла разработки.</li>
+        <li>Сторонний Vulnerability Assessment &amp; Penetration Testing (VAPT), завершённый до запуска. Вендор обязан устранить все находки.</li>
+        <li>Ролевой доступ к CMS: редакторы маркетинга не должны иметь доступа к настройкам инфраструктуры; IT-администраторы не должны иметь возможности изменять опубликованный контент без одобрения маркетинга.</li>
+        <li>Автоматические бэкапы с документированными процедурами восстановления.</li>
+        <li>Хостинг в регионе GCC: AWS Bahrain, Azure UAE North или эквивалент — ради производительности, резидентности данных и соответствия регуляторным требованиям.</li>
+      </ul>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 10 · Deliverables ══════════════════════════════════════ -->
+  <section class="sow-section" id="s10">
+
+    <div data-lang="en">
+      <h2 class="sec-h">10. Deliverables &amp; Joint Ownership</h2>
+      <p>The following table maps each project deliverable to its owning department. Neither team should be doing the other's job — but both teams are accountable for the outcome.</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Deliverable</th><th>Owner</th><th>Phase</th></tr></thead>
+          <tbody>
+            <tr><td>Discovery &amp; strategy document; audience personas; sitemap</td><td>Joint — Marketing Leads, IT reviews</td><td>Phase 1</td></tr>
+            <tr><td>Content inventory and asset preparation (projects, logos, photography, bios)</td><td>Marketing</td><td>Phase 1</td></tr>
+            <tr><td>Brand guidelines packaged for vendor</td><td>Marketing</td><td>Phase 1</td></tr>
+            <tr><td>Wireframes — all key pages, desktop + mobile, both languages</td><td>Vendor (Marketing approves)</td><td>Phase 1</td></tr>
+            <tr><td>Visual design concepts — 2 to 3 directions</td><td>Vendor (Marketing approves)</td><td>Phase 2</td></tr>
+            <tr><td>Full approved design set — all pages, Arabic and English</td><td>Vendor (Marketing approves)</td><td>Phase 2</td></tr>
+            <tr><td>Design system: typography, colors, components, grid</td><td>Vendor (IT reviews for implementation)</td><td>Phase 2</td></tr>
+            <tr><td>Frontend development — responsive, mobile-first</td><td>Vendor (IT reviews)</td><td>Phase 3</td></tr>
+            <tr><td>CMS integration with all launch content populated</td><td>Vendor (Marketing populates content)</td><td>Phase 3</td></tr>
+            <tr><td>Project portfolio module — filterable, CMS-managed</td><td>Vendor (IT validates; Marketing approves UX)</td><td>Phase 3</td></tr>
+            <tr><td>SEO setup — bilingual metadata, schema, sitemaps</td><td>Vendor (Marketing approves keyword strategy)</td><td>Phase 4</td></tr>
+            <tr><td>Security hardening, WAF, VAPT readiness</td><td>IT owns; vendor executes</td><td>Phase 4</td></tr>
+            <tr><td>QA testing and browser compatibility report</td><td>IT owns</td><td>Phase 4</td></tr>
+            <tr><td>CMS training session for content team</td><td>Vendor delivers; Marketing attends</td><td>Phase 4</td></tr>
+            <tr><td>Live launch — DNS, deployment, handover documentation</td><td>IT owns; Marketing sign-off required</td><td>Phase 4</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">10. Результаты работ и совместная ответственность</h2>
+      <p>Таблица ниже закрепляет каждый результат проекта за владеющим департаментом. Ни одна команда не должна делать работу другой — но обе отвечают за итог.</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Результат</th><th>Владелец</th><th>Фаза</th></tr></thead>
+          <tbody>
+            <tr><td>Документ discovery и стратегии; персоны аудитории; карта сайта</td><td>Совместно — ведёт маркетинг, IT ревьюит</td><td>Фаза 1</td></tr>
+            <tr><td>Инвентаризация контента и подготовка ассетов (проекты, логотипы, фото, биографии)</td><td>Маркетинг</td><td>Фаза 1</td></tr>
+            <tr><td>Брендбук, упакованный для вендора</td><td>Маркетинг</td><td>Фаза 1</td></tr>
+            <tr><td>Вайрфреймы — все ключевые страницы, десктоп + мобайл, оба языка</td><td>Вендор (утверждает маркетинг)</td><td>Фаза 1</td></tr>
+            <tr><td>Визуальные концепции дизайна — 2–3 направления</td><td>Вендор (утверждает маркетинг)</td><td>Фаза 2</td></tr>
+            <tr><td>Полный утверждённый дизайн-сет — все страницы, арабский и английский</td><td>Вендор (утверждает маркетинг)</td><td>Фаза 2</td></tr>
+            <tr><td>Дизайн-система: типографика, цвета, компоненты, сетка</td><td>Вендор (IT ревьюит для реализации)</td><td>Фаза 2</td></tr>
+            <tr><td>Frontend-разработка — адаптивная, mobile-first</td><td>Вендор (IT ревьюит)</td><td>Фаза 3</td></tr>
+            <tr><td>Интеграция CMS с полностью загруженным launch-контентом</td><td>Вендор (контент наполняет маркетинг)</td><td>Фаза 3</td></tr>
+            <tr><td>Модуль портфолио проектов — фильтруемый, управляемый из CMS</td><td>Вендор (IT валидирует; маркетинг утверждает UX)</td><td>Фаза 3</td></tr>
+            <tr><td>SEO-настройка — двуязычные метаданные, schema, сайтмапы</td><td>Вендор (маркетинг утверждает стратегию ключевых слов)</td><td>Фаза 4</td></tr>
+            <tr><td>Усиление безопасности, WAF, готовность к VAPT</td><td>Владеет IT; исполняет вендор</td><td>Фаза 4</td></tr>
+            <tr><td>QA-тестирование и отчёт о совместимости с браузерами</td><td>Владеет IT</td><td>Фаза 4</td></tr>
+            <tr><td>Обучающая сессия по CMS для контент-команды</td><td>Проводит вендор; участвует маркетинг</td><td>Фаза 4</td></tr>
+            <tr><td>Запуск — DNS, деплой, передаточная документация</td><td>Владеет IT; требуется sign-off маркетинга</td><td>Фаза 4</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 11 · Timeline ══════════════════════════════════════════ -->
+  <section class="sow-section" id="s11">
+
+    <div data-lang="en">
+      <h2 class="sec-h">11. Timeline</h2>
+      <p>Marketing's requirement is a production-ready website within two months of project kick-off. The following milestone structure is proposed for joint IT and Marketing agreement:</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Week</th><th>Milestone</th><th>Who Signs Off</th></tr></thead>
+          <tbody>
+            <tr><td>Week 1–2</td><td>Kick-off, discovery sessions, content inventory, sitemap finalized</td><td>Joint</td></tr>
+            <tr><td>Week 2</td><td>Discovery document and strategy approved</td><td>Marketing Director + IT Lead</td></tr>
+            <tr><td>Week 3</td><td>Wireframes approved — desktop, mobile, Arabic and English</td><td>Marketing</td></tr>
+            <tr><td>Week 4</td><td>Visual design concepts presented — 2 to 3 directions</td><td>Marketing</td></tr>
+            <tr><td>Week 5</td><td>Final design approved — full page set</td><td>Marketing Director</td></tr>
+            <tr><td>Week 6–7</td><td>Development complete; staging site live with all content</td><td>IT (technical) + Marketing (content)</td></tr>
+            <tr><td>Week 8</td><td>QA, SEO, security hardening, VAPT complete</td><td>IT</td></tr>
+            <tr><td>Week 8</td><td>Live launch, DNS migration, team training delivered</td><td>Joint sign-off</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">11. Таймлайн</h2>
+      <p>Требование маркетинга — production-ready сайт в течение двух месяцев с момента старта проекта. Следующая структура вех предлагается для совместного согласования IT и маркетинга:</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>Неделя</th><th>Веха</th><th>Кто подписывает</th></tr></thead>
+          <tbody>
+            <tr><td>Недели 1–2</td><td>Кик-офф, discovery-сессии, инвентаризация контента, финализация карты сайта</td><td>Совместно</td></tr>
+            <tr><td>Неделя 2</td><td>Утверждены discovery-документ и стратегия</td><td>Директор по маркетингу + IT-лид</td></tr>
+            <tr><td>Неделя 3</td><td>Утверждены вайрфреймы — десктоп, мобайл, арабский и английский</td><td>Маркетинг</td></tr>
+            <tr><td>Неделя 4</td><td>Представлены визуальные концепции — 2–3 направления</td><td>Маркетинг</td></tr>
+            <tr><td>Неделя 5</td><td>Утверждён финальный дизайн — полный набор страниц</td><td>Директор по маркетингу</td></tr>
+            <tr><td>Недели 6–7</td><td>Разработка завершена; staging-сайт работает со всем контентом</td><td>IT (техническая часть) + маркетинг (контент)</td></tr>
+            <tr><td>Неделя 8</td><td>QA, SEO, усиление безопасности, VAPT завершены</td><td>IT</td></tr>
+            <tr><td>Неделя 8</td><td>Запуск, миграция DNS, обучение команды проведено</td><td>Совместный sign-off</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 12 · KPIs ══════════════════════════════════════════════ -->
+  <section class="sow-section" id="s12">
+
+    <div data-lang="en">
+      <h2 class="sec-h">12. How Marketing Will Measure Success</h2>
+      <p>The following KPIs will be tracked in the six months following launch. Marketing will report on these monthly and share with IT for infrastructure planning purposes.</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>KPI</th><th>Target</th></tr></thead>
+          <tbody>
+            <tr><td>Average page load time</td><td>Under 3 seconds</td></tr>
+            <tr><td>Lighthouse performance score</td><td>85+ on all primary pages</td></tr>
+            <tr><td>Mobile traffic engagement rate</td><td>Above 60%</td></tr>
+            <tr><td>Bounce rate on key division landing pages</td><td>Below 45%</td></tr>
+            <tr><td>Contact form submission rate</td><td>Above 2% of total site visitors</td></tr>
+            <tr><td>Monthly organic search traffic growth</td><td>10%+ growth within 6 months of launch</td></tr>
+            <tr><td>Project portfolio pages</td><td>Among the top 3 most-visited page categories</td></tr>
+            <tr><td>Arabic vs. English traffic split</td><td>Tracked and reported monthly</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">12. Как маркетинг будет измерять успех</h2>
+      <p>Следующие KPI будут отслеживаться в течение шести месяцев после запуска. Маркетинг будет отчитываться по ним ежемесячно и делиться данными с IT для планирования инфраструктуры.</p>
+      <div class="table-wrap">
+        <table class="sow-table">
+          <thead><tr><th>KPI</th><th>Цель</th></tr></thead>
+          <tbody>
+            <tr><td>Среднее время загрузки страницы</td><td>Менее 3 секунд</td></tr>
+            <tr><td>Lighthouse performance score</td><td>85+ на всех основных страницах</td></tr>
+            <tr><td>Вовлечённость мобильного трафика</td><td>Выше 60%</td></tr>
+            <tr><td>Показатель отказов на ключевых лендингах дивизионов</td><td>Ниже 45%</td></tr>
+            <tr><td>Доля отправок контактной формы</td><td>Выше 2% от всех посетителей сайта</td></tr>
+            <tr><td>Месячный рост органического поискового трафика</td><td>Рост 10%+ в течение 6 месяцев после запуска</td></tr>
+            <tr><td>Страницы портфолио проектов</td><td>В топ-3 самых посещаемых категорий страниц</td></tr>
+            <tr><td>Соотношение арабского и английского трафика</td><td>Отслеживается и репортится ежемесячно</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ 13 · Next Steps ════════════════════════════════════════ -->
+  <section class="sow-section" id="s13">
+
+    <div data-lang="en">
+      <h2 class="sec-h">13. Immediate Next Steps</h2>
+      <p>Marketing requests that IT review this document and confirm alignment on the shared requirements before we proceed to vendor selection. The following actions are required from both teams:</p>
+      <p><strong>Marketing will:</strong></p>
+      <ul>
+        <li>Package brand guidelines (logo files, color palette, typography) for vendor distribution.</li>
+        <li>Complete divisional content inventory: project list, client logos, photography, and leadership bios.</li>
+        <li>Assign a named content owner per division for ongoing input and review.</li>
+        <li>RFP file.</li>
+      </ul>
+      <p><strong>IT is requested to:</strong></p>
+      <ul>
+        <li>Review and confirm the technical requirements in Sections 9 and 10 of this document.</li>
+        <li>Confirm the hosting and infrastructure setup and any constraints the vendor must work within.</li>
+        <li>Define the CRM integration specifications so the vendor can scope accurately.</li>
+        <li>Confirm VAPT partner and process so it can be built into the project timeline.</li>
+        <li>Assign a named IT project lead as joint point of contact alongside Marketing.</li>
+        <li>Prepare the shortlist of vendors to approach with the RFP.</li>
+      </ul>
+    </div>
+
+    <div data-lang="ru">
+      <h2 class="sec-h">13. Ближайшие шаги</h2>
+      <p>Маркетинг просит IT рассмотреть этот документ и подтвердить согласие по общим требованиям до перехода к выбору вендора. От обеих команд требуются следующие действия:</p>
+      <p><strong>Маркетинг:</strong></p>
+      <ul>
+        <li>Упакует брендбук (файлы логотипа, цветовая палитра, типографика) для передачи вендорам.</li>
+        <li>Завершит инвентаризацию контента по дивизионам: список проектов, логотипы клиентов, фотографии и биографии руководства.</li>
+        <li>Назначит именованного владельца контента в каждом дивизионе для постоянного ввода и ревью.</li>
+        <li>RFP-файл.</li>
+      </ul>
+      <p><strong>IT просят:</strong></p>
+      <ul>
+        <li>Рассмотреть и подтвердить технические требования разделов 9 и 10 этого документа.</li>
+        <li>Подтвердить конфигурацию хостинга и инфраструктуры и ограничения, в рамках которых должен работать вендор.</li>
+        <li>Определить спецификации интеграции с CRM, чтобы вендор мог точно оценить объём работ.</li>
+        <li>Подтвердить VAPT-партнёра и процесс, чтобы заложить их в таймлайн проекта.</li>
+        <li>Назначить именованного IT-лида проекта как совместную точку контакта вместе с маркетингом.</li>
+        <li>Подготовить шорт-лист вендоров для обращения с RFP.</li>
+      </ul>
+    </div>
+
+  </section>
+
+
+  <!-- ═══ Footer ══════════════════════════════════════════════════ -->
+  <section class="sow-section" id="sfoot">
+
+    <div data-lang="en">
+      <div class="doc-footer">
+        <strong>SRACO Group — Marketing Brief to IT | Corporate Website Redevelopment</strong>
+        <p class="fine">Prepared by Marketing &amp; Communications — Confidential — Version 2.0 — June 2026</p>
+      </div>
+    </div>
+
+    <div data-lang="ru">
+      <div class="doc-footer">
+        <strong>SRACO Group — маркетинговый бриф для IT | Редизайн корпоративного сайта</strong>
+        <p class="fine">Подготовлено департаментом маркетинга и коммуникаций — конфиденциально — версия 2.0 — июнь 2026</p>
+      </div>
+    </div>
+
+  </section>
+
+</article>
+
+<footer class="page-footer">
+  SOW v2.0 · <a href="../materials/SRACO-Website-project-SOW.pdf" target="_blank" rel="noopener">Download original PDF ↗</a> · <a href="../">← Dashboard</a>
+</footer>
+
+</main>
+
+
+<!-- ═══════════════════════════════ SCRIPT ══════════════════════ -->
+<script>
+(function () {
+  var KEY = 'sraco_sowhtml_lang';
+  var htmlEl = document.documentElement;
+  var btns = Array.prototype.slice.call(
+    document.querySelectorAll('[data-lang-btn]')
+  );
+
+  function applyLang(lang) {
+    if (lang !== 'en' && lang !== 'ru') lang = 'en';
+    htmlEl.lang = lang;
+    btns.forEach(function (b) {
+      b.classList.toggle('is-active', b.dataset.langBtn === lang);
+    });
+  }
+
+  // Init from storage, default 'en'
+  var stored = localStorage.getItem(KEY) || 'en';
+  applyLang(stored);
+
+  // Wire buttons
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var chosen = b.dataset.langBtn;
+      applyLang(chosen);
+      localStorage.setItem(KEY, chosen);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
