@@ -167,6 +167,12 @@ body {
 }
 .board-hint svg { width: 15px; height: 15px; }
 
+/* Vertical scroll cue under the board — columns vary in height, signal the estimate is below */
+.scroll-cue { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 0 auto; padding: 4px 0 26px; font-size: 12px; letter-spacing: 0.02em; color: rgba(255,255,255,0.45); }
+.scroll-cue svg { width: 20px; height: 20px; color: var(--brand-blue-light); animation: cue-bob 1.8s ease-in-out infinite; }
+@keyframes cue-bob { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(5px); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .scroll-cue svg { animation: none; } }
+
 .board {
   display: flex; flex-direction: row; align-items: flex-start; gap: 28px;
   overflow-x: auto; overflow-y: hidden;
@@ -310,6 +316,12 @@ body {
 
 <!-- SITEMAP first -->
 <div class="board" id="board"></div>
+
+<!-- Vertical scroll cue — columns vary in height; signal the estimate is below -->
+<div class="scroll-cue" aria-hidden="true">
+  <span>Scroll down for the estimate &amp; summary</span>
+  <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v13M6 12l6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div>
 
 <!-- ESTIMATE after — see the work before the price -->
 <div class="wrap estimate">
