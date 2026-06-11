@@ -490,11 +490,11 @@ const SITEMAP = [
     ],
   },
   { name: "Bilingual (Arabic-first / RTL)", work: true, tag: "Localization", sections: [
-      { name: "Arabic-first RTL design pass", desc: "Mirrored RTL layouts, Arabic typography, bidi handling across all templates. Auto-calculated 25–35% of the base scope.", computed: true, pctMin: 0.25, pctMax: 0.35 },
+      { name: "Arabic-first RTL design pass", desc: "Mirrored RTL layouts, Arabic typography, bidi handling across all templates. Auto-calculated 25–35% of the page-design volume only — same base as Adaptive.", computed: true, basis: "pages", pctMin: 0.25, pctMax: 0.35 },
     ],
   },
   { name: "Adaptive Design", work: true, tag: "Responsive", sections: [
-      { name: "Tablet & mobile (all pages)", desc: "Tablet + mobile layouts across all pages. Auto-calculated 30–40% of the base scope.", computed: true, pctMin: 0.30, pctMax: 0.40 },
+      { name: "Tablet & mobile (all pages)", desc: "Tablet + mobile layouts across all pages. Auto-calculated 30–40% of the page-design volume only — concepts, wireframes and animation work are not in the calculation base.", computed: true, basis: "pages", pctMin: 0.30, pctMax: 0.40 },
     ],
   },
   { name: "Implementation", excluded: true, sections: [
@@ -557,16 +557,30 @@ function nodeHTML({ num, kind, tag, name, sections, cls, p2, excluded }) {
     </div>`;
 }
 
-/* ─── Pre-pass: fill computed sections (RTL & Adaptive = pct of base) ─ */
-let baseMin = 0, baseMax = 0;
+/* ─── Pre-pass: fill computed sections ─────────────────────────
+   Two % bases:
+   - full base  = everything billable (work blocks + pages)
+   - pages base = page-design columns only (no concepts / wireframes /
+     animation work blocks) — used when a computed section sets basis:"pages" */
+let baseMin = 0, baseMax = 0, pagesMin = 0, pagesMax = 0;
 SITEMAP.forEach((p) => {
   if (p.excluded) return;   // excluded columns feed neither the estimate nor the % base
   [...p.sections, ...((p.children || []).flatMap((c) => c.sections))]
-    .forEach((s) => { if (!s.computed) { baseMin += s.min; baseMax += s.max; } });
+    .forEach((s) => {
+      if (s.computed) return;
+      baseMin += s.min; baseMax += s.max;
+      if (!p.work) { pagesMin += s.min; pagesMax += s.max; }
+    });
 });
 SITEMAP.forEach((p) => {
   [...p.sections, ...((p.children || []).flatMap((c) => c.sections))]
-    .forEach((s) => { if (s.computed) { s.min = Math.round(baseMin * s.pctMin * 2) / 2; s.max = Math.round(baseMax * s.pctMax * 2) / 2; } });
+    .forEach((s) => {
+      if (!s.computed) return;
+      const bMin = s.basis === "pages" ? pagesMin : baseMin;
+      const bMax = s.basis === "pages" ? pagesMax : baseMax;
+      s.min = Math.round(bMin * s.pctMin * 2) / 2;
+      s.max = Math.round(bMax * s.pctMax * 2) / 2;
+    });
 });
 
 /* ─── Render board ───────────────────────────────────────────── */
