@@ -167,24 +167,28 @@ body {
 }
 .board-hint svg { width: 15px; height: 15px; }
 
-/* Fixed scroll cue — pinned to bottom of screen; two animated arrows (down + right); hides at the summary */
-.scroll-cue {
-  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 90;
-  display: flex; align-items: center; gap: 9px;
-  padding: 9px 16px; border-radius: 999px;
-  background: rgba(10, 18, 25, 0.78); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  border: 1px solid rgba(159, 186, 205, 0.22); box-shadow: 0 6px 24px rgba(0, 0, 0, 0.32);
-  font-size: 12.5px; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.72); white-space: nowrap;
-  transition: opacity 400ms ease, transform 400ms ease;
+/* Sticky estimate bar — the total is one tap away from anywhere on the board.
+   Appears once the client starts exploring (not in the first screen — we don't lead with price),
+   hides once the full breakdown is on screen. Replaces the old floating scroll cue. */
+.estimate-bar {
+  position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%) translateY(150%); z-index: 95;
+  display: inline-flex; align-items: center; gap: 16px;
+  padding: 10px 11px 10px 20px; border-radius: 999px;
+  background: rgba(12, 20, 28, 0.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border: 1px solid rgba(159, 186, 205, 0.26); box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+  color: var(--white); font-family: inherit; cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transition: opacity 360ms ease, transform 360ms ease;
 }
-.scroll-cue.is-hidden { opacity: 0; transform: translateX(-50%) translateY(14px); pointer-events: none; }
-.scroll-cue svg { width: 17px; height: 17px; color: var(--brand-blue-light); flex-shrink: 0; }
-.scroll-cue .cue-down  { animation: cue-bob-y 1.6s ease-in-out infinite; }
-.scroll-cue .cue-right { animation: cue-bob-x 1.6s ease-in-out infinite; }
-@keyframes cue-bob-y { 0%, 100% { transform: translateY(-2px); opacity: 0.55; } 50% { transform: translateY(3px); opacity: 1; } }
-@keyframes cue-bob-x { 0%, 100% { transform: translateX(-2px); opacity: 0.55; } 50% { transform: translateX(3px); opacity: 1; } }
-@media (max-width: 560px) { .scroll-cue { left: 14px; bottom: 16px; transform: none; font-size: 11.5px; padding: 8px 13px; } .scroll-cue.is-hidden { transform: translateY(14px); } }
-@media (prefers-reduced-motion: reduce) { .scroll-cue .cue-down, .scroll-cue .cue-right { animation: none; } }
+.estimate-bar.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+.estimate-bar__main { display: flex; align-items: baseline; gap: 9px; white-space: nowrap; min-width: 0; }
+.estimate-bar__label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255, 255, 255, 0.5); }
+.estimate-bar__total { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: #c3cdff; font-variant-numeric: tabular-nums; }
+.estimate-bar__meta { font-size: 12px; font-weight: 500; color: rgba(255, 255, 255, 0.5); font-variant-numeric: tabular-nums; }
+.estimate-bar__cta { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; background: rgba(75, 108, 255, 0.18); border: 1px solid rgba(75, 108, 255, 0.42); font-size: 12.5px; font-weight: 600; color: #dbe2ff; }
+.estimate-bar__cta svg { width: 15px; height: 15px; animation: cue-bob-y 1.6s ease-in-out infinite; }
+@keyframes cue-bob-y { 0%, 100% { transform: translateY(-2px); opacity: 0.6; } 50% { transform: translateY(3px); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .estimate-bar__cta svg { animation: none; } }
 
 .board {
   display: flex; flex-direction: row; align-items: flex-start; gap: 28px;
@@ -282,6 +286,30 @@ body {
 .breakdown__notes strong { color: rgba(255,255,255,0.65); font-weight: 600; }
 .breakdown__note { margin-top: 16px; font-size: 12px; color: rgba(255, 255, 255, 0.4); line-height: 1.5; }
 .footer-pad { height: 120px; }
+
+/* Table can never push the page wide — it scrolls inside its own box if it ever has to */
+.breakdown__scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* ─── Mobile (phone) — keep everything inside the viewport, no horizontal page scroll ─── */
+@media (max-width: 560px) {
+  .wrap { padding: 24px 18px 16px; }
+  .board { padding-left: 18px; padding-right: 18px; }
+  .breakdown { padding: 24px 18px 0; }
+
+  /* compact the breakdown so the numbers fit a phone without overflowing */
+  .breakdown__table th, .breakdown__table td { padding: 9px 6px; font-size: 12.5px; }
+  .breakdown__table tr.row-sub td:not(:first-child) { font-size: 15px; }
+  .breakdown__table tr.is-total td { font-size: 12.5px; padding-top: 14px; }
+  .breakdown__table tr.is-total td:not(:first-child) { font-size: 18px; }
+  .breakdown__table tr.is-total .mm { margin-right: 3px; }
+
+  /* full-width estimate bar; lift the preview nav chip above it ONLY while the bar is on screen */
+  .estimate-bar { left: 12px; right: 12px; bottom: 12px; transform: translateY(150%); justify-content: space-between; gap: 10px; padding: 9px 9px 9px 16px; }
+  .estimate-bar.is-visible { transform: translateY(0); }
+  .estimate-bar__meta { display: none; }
+  .service-menu { transition: bottom 300ms ease; }
+  body.bar-shown .service-menu { bottom: 74px; }
+}
 </style>
 </head>
 <body>
@@ -330,12 +358,18 @@ body {
 <!-- SITEMAP first -->
 <div class="board" id="board"></div>
 
-<!-- Fixed scroll cue (bottom of screen) — board scrolls right, page scrolls down; hides at the summary -->
-<div class="scroll-cue" id="scrollCue" aria-hidden="true">
-  <svg class="cue-down" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M6 13l6 6 6-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <svg class="cue-right" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <span>Scroll down &amp; scroll right</span>
-</div>
+<!-- Sticky estimate bar — total is one tap away from anywhere; appears once exploring starts, hides at the breakdown -->
+<button class="estimate-bar" id="estimateBar" type="button" aria-label="Jump to the full estimate breakdown">
+  <span class="estimate-bar__main">
+    <span class="estimate-bar__label">Estimate</span>
+    <span class="estimate-bar__total" id="estimateBarTotal">—</span>
+    <span class="estimate-bar__meta" id="estimateBarMeta"></span>
+  </span>
+  <span class="estimate-bar__cta">
+    Breakdown
+    <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M6 13l6 6 6-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </span>
+</button>
 
 <!-- ESTIMATE after — see the work before the price -->
 <div class="wrap estimate">
@@ -343,10 +377,12 @@ body {
 
   <div class="rollup" id="rollup"></div>
 
-  <table class="breakdown__table">
-    <thead><tr><th>Line</th><th>Min</th><th>Max</th></tr></thead>
-    <tbody id="breakdownBody"></tbody>
-  </table>
+  <div class="breakdown__scroll">
+    <table class="breakdown__table">
+      <thead><tr><th>Line</th><th>Min</th><th>Max</th></tr></thead>
+      <tbody id="breakdownBody"></tbody>
+    </table>
+  </div>
   <div class="breakdown__notes">
     <p><strong>Preliminary figure</strong> — the final estimate is confirmed once the website sitemap and wireframes are approved.</p>
     <p><strong>Comments &amp; unplanned work</strong> — design iterations after each delivery. <strong>Two revision rounds per stage are included</strong>; further rounds are billed hourly at the same rate.</p>
@@ -781,6 +817,12 @@ document.getElementById("rollup").innerHTML = `
   <div class="stat"><div class="stat__label">Timeline</div><div class="stat__value">${TIMELINE_WEEKS}<small> weeks</small></div><div class="stat__sub">${Math.floor(grandMin)}–${Math.floor(grandMax)} hours</div></div>
   <div class="stat stat--accent"><div class="stat__label">Total</div><div class="stat__value"><span class="stat__mm">min</span> ${fmtUSD(niceMin)}</div><div class="stat__sub"><span class="stat__mm">max</span> ${fmtUSD(niceMax)}</div></div>`;
 
+// feed the sticky estimate bar the same headline figure
+const barTotal = document.getElementById("estimateBarTotal");
+const barMeta = document.getElementById("estimateBarMeta");
+if (barTotal) barTotal.textContent = `${fmtUSD(niceMin)}–${fmtUSD(niceMax)}`;
+if (barMeta) barMeta.textContent = `· ${TIMELINE_WEEKS} weeks`;
+
 const pctLabel = (a, b) => (a === b ? `${a * 100}%` : `${a * 100}–${b * 100}%`);
 const blockRows = blocks.map((b) => `
   <tr><td>${b.name} (${fmtH(b.mn)}–${fmtH(b.mx)} hrs)</td><td>${fmtUSD(b.mn * CONFIG.rate)}</td><td>${fmtUSD(b.mx * CONFIG.rate)}</td></tr>`).join("");
@@ -818,23 +860,29 @@ document.getElementById("breakdownBody").innerHTML = `
 /* ─── Single estimate — V2. V1 archived to ARCHIVE-versions.md; version tabs removed 2026-06-11. ─── */
 renderVersion("v2");
 
-/* ─── Scroll cue — fixed at bottom; hide for good once the estimate summary scrolls into view ─── */
+/* ─── Sticky estimate bar — appears once the client starts exploring, hides at the breakdown.
+   Tap = jump straight to the full estimate (offset for the sticky topbar). Toggles (not hide-once)
+   so the total stays reachable whenever you're back up in the board.
+   Uses scroll + getBoundingClientRect (NOT IntersectionObserver — headless preview never fires IO). ─── */
 (() => {
-  const cue = document.getElementById("scrollCue");
+  const bar = document.getElementById("estimateBar");
   const summary = document.querySelector(".estimate");
-  if (!cue || !summary) return;
-  let done = false;
-  const maybeHide = () => {
-    if (done) return;
+  if (!bar || !summary) return;
+  bar.addEventListener("click", () => {
+    const y = summary.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0) - 72;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  });
+  const update = () => {
     const vh = window.innerHeight || document.documentElement.clientHeight || 700;
-    if (summary.getBoundingClientRect().top <= vh * 0.85) {   // summary has entered the viewport
-      cue.classList.add("is-hidden");
-      done = true;
-      window.removeEventListener("scroll", maybeHide);
-    }
+    const atSummary = summary.getBoundingClientRect().top <= vh * 0.85;   // breakdown is on screen
+    const engaged = (window.scrollY || window.pageYOffset || 0) > 140;     // past the first screen
+    const show = engaged && !atSummary;
+    bar.classList.toggle("is-visible", show);
+    document.body.classList.toggle("bar-shown", show);   // lift the preview nav chip clear of the bar
   };
-  window.addEventListener("scroll", maybeHide, { passive: true });
-  maybeHide();
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update, { passive: true });
+  update();
 })();
 </script>
 
